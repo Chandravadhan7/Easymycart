@@ -68,4 +68,14 @@ public class ProductService {
            User user1 = userRepository.save(user);
            return user1;
        }
+
+       public User getUserDetails(Long id){
+           User user = userRepository.getUserDetails(id);
+           return user;
+       }
+
+       public User getUserByUserName(User user){
+           User user1 = userRepository.getUserByUserName(user.getUserName());
+           return user1;
+       }
 }

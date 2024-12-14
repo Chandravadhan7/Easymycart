@@ -80,9 +80,7 @@ public class ProductController {
         return categories;
     }
 
-    @PostMapping("/signup")
-    public User addUser(@RequestBody User user){
-        User user1 = productService.addUser(user);
-        return user;
-    }
+
+
+
 }
