@@ -2,6 +2,7 @@ package com.xyz.easymycart.controller;
 
 import com.xyz.easymycart.model.User;
 import com.xyz.easymycart.service.ProductService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +28,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public User login(@RequestBody User user){
+    public User login(@RequestBody User user, HttpSession session){
         User user1 = productService.getUserByUserName(user);
+        session.setAttribute("user_id",user1.getId());
         return user1;
     }
 }

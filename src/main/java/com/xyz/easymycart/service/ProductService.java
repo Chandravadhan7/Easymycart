@@ -1,13 +1,7 @@
 package com.xyz.easymycart.service;
 
-import com.xyz.easymycart.model.Category;
-import com.xyz.easymycart.model.Product;
-import com.xyz.easymycart.model.Rating;
-import com.xyz.easymycart.model.User;
-import com.xyz.easymycart.repository.CategoryRepository;
-import com.xyz.easymycart.repository.ProductRepository;
-import com.xyz.easymycart.repository.RatingRepository;
-import com.xyz.easymycart.repository.UserRepository;
+import com.xyz.easymycart.model.*;
+import com.xyz.easymycart.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,13 +12,15 @@ import java.util.Optional;
 public class ProductService {
        private ProductRepository productRepository;
        private RatingRepository ratingRepository;
+       private CartRepository cartRepository;
        @Autowired
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository,UserRepository userRepository,RatingRepository ratingRepository) {
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, UserRepository userRepository, RatingRepository ratingRepository, CartRepository cartRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
         this.ratingRepository = ratingRepository;
-    }
+           this.cartRepository = cartRepository;
+       }
 
     private CategoryRepository categoryRepository;
     private UserRepository userRepository;
@@ -88,4 +84,17 @@ public class ProductService {
            Rating rating = optionalRating.get();
            return rating;
        }
+
+       public Cart getOrCreateCart(Long userId){
+           Cart existingCart = cartRepository.findByUserIdAndStatus(userId,"active");
+           if(existingCart != null){
+               return existingCart;
+           }
+
+           Cart cart = new Cart();
+           cart.setUser_id(userId);
+           cart.setStatus("active");
+           return cartRepository.save(cart);
+       }
+
 }

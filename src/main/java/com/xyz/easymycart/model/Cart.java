@@ -8,6 +8,7 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(nullable = false)
     private Long user_id;
     private String status;
     public Cart(){

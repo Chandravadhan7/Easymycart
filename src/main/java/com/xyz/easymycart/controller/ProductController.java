@@ -23,28 +23,16 @@ public class ProductController {
         this.productService = productService;
     }
 
-//    @GetMapping("/")
-//    public List<Product> getAllProducts(){
-//        List<Product> products = productService.getAllProducts();
-//        return products;
-//    }
 
     @GetMapping("/")
     public ResponseEntity<List<Product>> getAllProducts() {
-//        logger.info("Fetching all products");
         try {
             List<Product> products = productService.getAllProducts();
             return new ResponseEntity<>(products, HttpStatus.OK);
         } catch (Exception e) {
-//            logger.error("Error fetching products", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-//    @GetMapping("/")
-//    public List<Product> getAllProducts() {
-//        return List.of(new Product(1L, "Sample Product", 99,"desctip","img"));
-//    }
 
     @GetMapping("/categories")
     public List<String> getAllCategories(){
