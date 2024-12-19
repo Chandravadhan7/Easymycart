@@ -2,9 +2,11 @@ package com.xyz.easymycart.service;
 
 import com.xyz.easymycart.model.Category;
 import com.xyz.easymycart.model.Product;
+import com.xyz.easymycart.model.Rating;
 import com.xyz.easymycart.model.User;
 import com.xyz.easymycart.repository.CategoryRepository;
 import com.xyz.easymycart.repository.ProductRepository;
+import com.xyz.easymycart.repository.RatingRepository;
 import com.xyz.easymycart.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,11 +17,13 @@ import java.util.Optional;
 @Service
 public class ProductService {
        private ProductRepository productRepository;
+       private RatingRepository ratingRepository;
        @Autowired
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository,UserRepository userRepository) {
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository,UserRepository userRepository,RatingRepository ratingRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
+        this.ratingRepository = ratingRepository;
     }
 
     private CategoryRepository categoryRepository;
@@ -77,5 +81,11 @@ public class ProductService {
        public User getUserByUserName(User user){
            User user1 = userRepository.getUserByUserName(user.getUserName());
            return user1;
+       }
+
+       public Rating getProductRating(Long id){
+           Optional<Rating> optionalRating = ratingRepository.getProductRating(id);
+           Rating rating = optionalRating.get();
+           return rating;
        }
 }

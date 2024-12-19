@@ -2,6 +2,7 @@ package com.xyz.easymycart.controller;
 
 import com.xyz.easymycart.model.Category;
 import com.xyz.easymycart.model.Product;
+import com.xyz.easymycart.model.Rating;
 import com.xyz.easymycart.model.User;
 import com.xyz.easymycart.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,6 +81,11 @@ public class ProductController {
         return categories;
     }
 
+    @GetMapping("/rating/{id}")
+    public Rating getProductRating(@PathVariable("id") Long id){
+        Rating rating = productService.getProductRating(id);
+        return rating;
+    }
 
 
 

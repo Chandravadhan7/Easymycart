@@ -25,19 +25,21 @@ public class Product implements Serializable {
 //    private Category category;
     private Long category_id;
     private String image;
-    @OneToOne(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST,CascadeType.MERGE} )
-    private Rating rating;
+//    @OneToOne(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST,CascadeType.MERGE} )
+//    private Rating rating;
+    private Long rating_id;
 
     public Product() {
     }
 
-    public Product(Long id, String title, Integer price, String description, String image,Long category_id) {
+    public Product(Long id, String title, Integer price, String description, String image,Long category_id,Long rating_id) {
         this.id = id;
         this.title = title;
         this.price = price;
         this.description = description;
         this.image = image;
         this.category_id = category_id;
+        this.rating_id = rating_id;
     }
 
     public Long getId() {
@@ -85,4 +87,11 @@ public class Product implements Serializable {
         this.category_id = category_id;
     }
 
+    public Long getRating_id() {
+        return rating_id;
+    }
+
+    public void setRating_id(Long rating_id) {
+        this.rating_id = rating_id;
+    }
 }
