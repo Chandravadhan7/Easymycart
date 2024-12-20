@@ -13,13 +13,15 @@ public class ProductService {
        private ProductRepository productRepository;
        private RatingRepository ratingRepository;
        private CartRepository cartRepository;
+       private CartItemsRepository cartItemsRepository;
        @Autowired
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, UserRepository userRepository, RatingRepository ratingRepository, CartRepository cartRepository) {
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, UserRepository userRepository, RatingRepository ratingRepository, CartRepository cartRepository, CartItemsRepository cartItemsRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
         this.ratingRepository = ratingRepository;
            this.cartRepository = cartRepository;
+           this.cartItemsRepository = cartItemsRepository;
        }
 
     private CategoryRepository categoryRepository;
@@ -92,9 +94,16 @@ public class ProductService {
            }
 
            Cart cart = new Cart();
-           cart.setUser_id(userId);
+           cart.setUserId(userId);
            cart.setStatus("active");
            return cartRepository.save(cart);
+       }
+
+       public CartItems addCartItem(Long cartId){
+           CartItems cartItems = new CartItems();
+           cartItems.setCart_id(cartId);
+           cartItems.setQuantity(1);
+           return cartItemsRepository.save(cartItems);
        }
 
 }

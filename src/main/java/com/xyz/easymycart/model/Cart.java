@@ -1,6 +1,8 @@
 package com.xyz.easymycart.model;
 
-import jakarta.persistence.*;
+
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "cart")
@@ -8,15 +10,15 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(nullable = false)
-    private Long user_id;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
     private String status;
     public Cart(){
 
     }
-    public Cart(Long id, Long user_id, String status) {
+    public Cart(Long id, Long userId, String status) {
         this.id = id;
-        this.user_id = user_id;
+        this.userId = userId;
         this.status = status;
     }
 
@@ -30,12 +32,12 @@ public class Cart {
         this.status = status;
     }
 
-    public Long getUser_id() {
-        return user_id;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public Long getId() {

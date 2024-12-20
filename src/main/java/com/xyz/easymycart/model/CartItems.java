@@ -1,27 +1,29 @@
 package com.xyz.easymycart.model;
 
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+
+
+import javax.persistence.*;
+
 
 @Entity
-@Table(name = "cart-items")
-@Getter
-@Setter
+@Table(name = "cart_items")
 public class CartItems {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Long cart_id;
+    @Column(name = "product_id",nullable = false)
+    private Long productId;
     private Integer quantity;
 
     public CartItems(){
 
     }
-    public CartItems(Long id, Long cartId, Integer quantity) {
+    public CartItems(Long id, Long cartId, Integer quantity,Long productId) {
         this.id = id;
         cart_id = cartId;
         this.quantity = quantity;
+        this.productId = productId;
     }
 
     public Integer getQuantity() {
@@ -46,5 +48,13 @@ public class CartItems {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 }

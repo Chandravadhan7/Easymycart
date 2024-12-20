@@ -1,7 +1,7 @@
 package com.xyz.easymycart.model;
 
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "user")
