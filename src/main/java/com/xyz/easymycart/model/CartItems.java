@@ -1,9 +1,8 @@
 package com.xyz.easymycart.model;
 
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
-
 
 @Entity
 @Table(name = "cart_items")
@@ -13,6 +12,7 @@ public class CartItems {
     private Long id;
     private Long cart_id;
     @Column(name = "product_id",nullable = false)
+    @JsonProperty("product_id")
     private Long productId;
     private Integer quantity;
 

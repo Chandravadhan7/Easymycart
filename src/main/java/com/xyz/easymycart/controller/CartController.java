@@ -7,8 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000",allowCredentials = "true")
 @RestController
 @RequestMapping("cart")
 public class CartController {
@@ -19,21 +20,34 @@ public class CartController {
         this.productService = productService;
     }
 
-    @PostMapping("/")
+    @GetMapping("/")
     public Cart getOrCreateCart(HttpSession session) {
         Long userId = (Long) session.getAttribute("user_id");
+
+        if (userId == null) {
+            throw new RuntimeException("User not logged in. Cannot create or retrieve cart.");
+        }
+
         System.out.println("User ID from session: " + userId);
+
         Cart cart = productService.getOrCreateCart(userId);
-        session.setAttribute("cartId",cart.getId());
+        session.setAttribute("cartId", cart.getId());
         return cart;
     }
 
-    @PostMapping("/cartitems")
-    public CartItems addCartItem(@RequestBody CartItems cartItems1){
-        CartItems cartItems = productService.addCartItem(cartItems1.getCart_id());
-        return cartItems;
+    @PostMapping("/{cartId}/cartitems")
+    public CartItems addCartItem(
+            @PathVariable("cartId") Long cartId,
+            @RequestParam("product_id") Long productId,
+            @RequestParam("quantity") int quantity) {
+        return productService.addCartItem(cartId, productId, quantity);
     }
 
+    @GetMapping("/{cartId}")
+    public List<CartItems> getCartItems(@PathVariable("cartId") Long cartId){
+        List<CartItems> cartItems= productService.getCartItemsByCartId(cartId);
+        return cartItems;
+    }
 
 
 //    @PostMapping("/")

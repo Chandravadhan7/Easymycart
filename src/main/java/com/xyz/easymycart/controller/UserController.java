@@ -11,7 +11,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/user")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000",allowCredentials = "true")
 public class UserController {
     private ProductService productService;
 
@@ -27,10 +27,15 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public User login(@RequestBody User user, HttpSession session){
+    public User login(@RequestBody User user, HttpSession session ){
         User user1 = productService.getUserByUserName(user);
-        session.setAttribute("user_id",user1.getId());
-        System.out.println("User ID set in session: " + user1.getId());
-        return user1;
+
+        if (user1 != null) {
+            session.setAttribute("user_id", user1.getId());
+            System.out.println("User ID set in session: " + user1.getId());
+            return user1;
+        } else {
+            throw new RuntimeException("Invalid user credentials");
+        }
     }
 }
