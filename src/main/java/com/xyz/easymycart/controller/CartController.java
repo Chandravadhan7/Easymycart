@@ -2,8 +2,11 @@ package com.xyz.easymycart.controller;
 
 import com.xyz.easymycart.model.Cart;
 import com.xyz.easymycart.model.CartItems;
+import com.xyz.easymycart.model.Product;
 import com.xyz.easymycart.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -31,7 +34,6 @@ public class CartController {
         System.out.println("User ID from session: " + userId);
 
         Cart cart = productService.getOrCreateCart(userId);
-        session.setAttribute("cartId", cart.getId());
         return cart;
     }
 
@@ -49,12 +51,21 @@ public class CartController {
         return cartItems;
     }
 
+    @DeleteMapping("/{productId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeFromCart(@PathVariable("productId") Long productId){
+        productService.removeFromCart(productId);
+    }
 
-//    @PostMapping("/")
-//    public Cart getOrCreateCart(){
-////        Long userId = (Long) session.getAttribute("user_id");
-//        Cart cart = productService.getOrCreateCart(11L);
-//        return cart;
-//    }
-//
+    @PatchMapping("/cartitems/{productId}/increment")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void increment(@PathVariable("productId") Long productId){
+        productService.increment(productId);
+    }
+
+    @PatchMapping("cartitems/{productId}/decrement")
+    void decrement(@PathVariable("productId") Long productId){
+        productService.decrement(productId);
+    }
+
 }

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("user")
 @CrossOrigin(origins = "http://localhost:3000",allowCredentials = "true")
 public class UserController {
     private ProductService productService;

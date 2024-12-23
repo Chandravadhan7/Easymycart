@@ -16,10 +16,10 @@ public class ProductService {
        private CartItemsRepository cartItemsRepository;
        @Autowired
     public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, UserRepository userRepository, RatingRepository ratingRepository, CartRepository cartRepository, CartItemsRepository cartItemsRepository) {
-        this.productRepository = productRepository;
-        this.categoryRepository = categoryRepository;
-        this.userRepository = userRepository;
-        this.ratingRepository = ratingRepository;
+           this.productRepository = productRepository;
+           this.categoryRepository = categoryRepository;
+           this.userRepository = userRepository;
+           this.ratingRepository = ratingRepository;
            this.cartRepository = cartRepository;
            this.cartItemsRepository = cartItemsRepository;
        }
@@ -112,14 +112,6 @@ public class ProductService {
                throw new IllegalArgumentException("Product does not exist for ID: " + productId);
            }
 
-           Optional<CartItems> existingCartItem = cartItemsRepository
-                   .findByCartIdAndProductId(cartId, productId);
-           if (existingCartItem.isPresent()) {
-               CartItems cartItem = existingCartItem.get();
-               cartItem.setQuantity(cartItem.getQuantity() + quantity);
-               return cartItemsRepository.save(cartItem);
-           }
-
            CartItems cartItems = new CartItems();
            cartItems.setCart_id(cartId);
            cartItems.setProductId(productId);
@@ -132,4 +124,15 @@ public class ProductService {
            return cartItems;
        }
 
+       public void removeFromCart(Long productId){
+           cartItemsRepository.removeFromCart(productId);
+       }
+
+       public void increment(Long productId){
+           cartItemsRepository.increment(productId);
+       }
+
+       public void decrement(Long productId){
+           cartItemsRepository.decrement(productId);
+       }
 }
