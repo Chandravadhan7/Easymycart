@@ -15,8 +15,9 @@ public class ProductService {
        private CartRepository cartRepository;
        private CartItemsRepository cartItemsRepository;
        private WishlistRepository wishlistRepository;
+       private WishlistItemsRepository wishlistItemsRepository;
        @Autowired
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, UserRepository userRepository, RatingRepository ratingRepository, CartRepository cartRepository, CartItemsRepository cartItemsRepository, WishlistRepository wishlistRepository) {
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, UserRepository userRepository, RatingRepository ratingRepository, CartRepository cartRepository, CartItemsRepository cartItemsRepository, WishlistRepository wishlistRepository, WishlistItemsRepository wishlistItemsRepository) {
            this.productRepository = productRepository;
            this.categoryRepository = categoryRepository;
            this.userRepository = userRepository;
@@ -24,6 +25,7 @@ public class ProductService {
            this.cartRepository = cartRepository;
            this.cartItemsRepository = cartItemsRepository;
            this.wishlistRepository = wishlistRepository;
+           this.wishlistItemsRepository = wishlistItemsRepository;
        }
 
     private CategoryRepository categoryRepository;
@@ -150,5 +152,17 @@ public class ProductService {
            Wishlist wishlist = new Wishlist();
            wishlist.setUserId(userId);
            return wishlistRepository.save(wishlist);
+       }
+
+       public WishlistItems addWishlistItem(Long wishlistId,Long productId){
+           WishlistItems wishlistItem = new WishlistItems();
+           wishlistItem.setProductId(productId);
+           wishlistItem.setWishListId(wishlistId);
+           return wishlistItemsRepository.save(wishlistItem);
+       }
+
+       public List<WishlistItems> getWishlistItemsByWishId(Long wishlistId){
+           List<WishlistItems> wishlistItems = wishlistItemsRepository.getWishlistItemsByWishlistId(wishlistId);
+           return wishlistItems;
        }
 }
