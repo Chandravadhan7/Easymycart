@@ -17,7 +17,7 @@ public interface CartItemsRepository extends JpaRepository<CartItems,Long> {
     CartItems save(CartItems cartItems);
 
     @Query(value = "select * from cart_items ct where ct.cart_id = :cartId and ct.product_id = :productId",nativeQuery = true)
-    Optional<CartItems> findByCartIdAndProductId(Long cartId, Long productId);
+    CartItems findByCartIdAndProductId(@Param("cartId") Long cartId,@Param("productId") Long productId);
 
     @Query(value = "select * from cart_items ct where ct.cart_id = :cartId",nativeQuery = true)
     List<CartItems> findByCartId(@Param("cartId") Long cartId);
@@ -34,6 +34,8 @@ public interface CartItemsRepository extends JpaRepository<CartItems,Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "update cart_items ct set ct.quantity = ct.quantity + 1 where ct.product_id = :productId and ct.quantity > 1",nativeQuery = true)
+    @Query(value = "update cart_items ct set ct.quantity = ct.quantity - 1 where ct.product_id = :productId and ct.quantity > 1",nativeQuery = true)
     void decrement(@Param("productId") Long productId);
+
+
 }

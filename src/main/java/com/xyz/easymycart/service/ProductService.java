@@ -14,14 +14,16 @@ public class ProductService {
        private RatingRepository ratingRepository;
        private CartRepository cartRepository;
        private CartItemsRepository cartItemsRepository;
+       private WishlistRepository wishlistRepository;
        @Autowired
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, UserRepository userRepository, RatingRepository ratingRepository, CartRepository cartRepository, CartItemsRepository cartItemsRepository) {
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, UserRepository userRepository, RatingRepository ratingRepository, CartRepository cartRepository, CartItemsRepository cartItemsRepository, WishlistRepository wishlistRepository) {
            this.productRepository = productRepository;
            this.categoryRepository = categoryRepository;
            this.userRepository = userRepository;
            this.ratingRepository = ratingRepository;
            this.cartRepository = cartRepository;
            this.cartItemsRepository = cartItemsRepository;
+           this.wishlistRepository = wishlistRepository;
        }
 
     private CategoryRepository categoryRepository;
@@ -123,6 +125,10 @@ public class ProductService {
            List<CartItems> cartItems = cartItemsRepository.findByCartId(cartId);
            return cartItems;
        }
+       public CartItems getCartItem(Long cartId,Long productId){
+           CartItems cartItem = cartItemsRepository.findByCartIdAndProductId(cartId,productId);
+           return cartItem;
+       }
 
        public void removeFromCart(Long productId){
            cartItemsRepository.removeFromCart(productId);
@@ -134,5 +140,15 @@ public class ProductService {
 
        public void decrement(Long productId){
            cartItemsRepository.decrement(productId);
+       }
+
+       public Wishlist getOrCreateWishlist(Long userId){
+           Wishlist existingWishlist = wishlistRepository.findWishlistByUserId(userId);
+           if(existingWishlist != null){
+               return existingWishlist;
+           }
+           Wishlist wishlist = new Wishlist();
+           wishlist.setUserId(userId);
+           return wishlistRepository.save(wishlist);
        }
 }

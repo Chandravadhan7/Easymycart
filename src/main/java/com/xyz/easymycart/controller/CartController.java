@@ -51,6 +51,12 @@ public class CartController {
         return cartItems;
     }
 
+    @GetMapping("/{cartId}/{productId}")
+    public CartItems getCartItem(@PathVariable("cartId") Long cartId,@PathVariable("productId") Long productId){
+        CartItems cartItem = productService.getCartItem(cartId,productId);
+        return cartItem;
+    }
+
     @DeleteMapping("/{productId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeFromCart(@PathVariable("productId") Long productId){
