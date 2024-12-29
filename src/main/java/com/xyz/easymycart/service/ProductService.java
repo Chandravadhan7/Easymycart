@@ -2,167 +2,189 @@ package com.xyz.easymycart.service;
 
 import com.xyz.easymycart.model.*;
 import com.xyz.easymycart.repository.*;
+import com.xyz.easymycart.request.LoginRequestDto;
+import com.xyz.easymycart.response.LoginResponseDto;
+import com.xyz.easymycart.utilities.UniqueHelper;
+import com.xyz.easymycart.utilities.UtilityHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class ProductService {
-    private ProductRepository productRepository;
-       private RatingRepository ratingRepository;
-       private CartRepository cartRepository;
-       private CartItemsRepository cartItemsRepository;
-       private WishlistRepository wishlistRepository;
-       private WishlistItemsRepository wishlistItemsRepository;
-       @Autowired
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, UserRepository userRepository, RatingRepository ratingRepository, CartRepository cartRepository, CartItemsRepository cartItemsRepository, WishlistRepository wishlistRepository, WishlistItemsRepository wishlistItemsRepository) {
-           this.productRepository = productRepository;
-           this.categoryRepository = categoryRepository;
-           this.userRepository = userRepository;
-           this.ratingRepository = ratingRepository;
-           this.cartRepository = cartRepository;
-           this.cartItemsRepository = cartItemsRepository;
-           this.wishlistRepository = wishlistRepository;
-           this.wishlistItemsRepository = wishlistItemsRepository;
-       }
+    private final ProductRepository productRepository;
+    private final RatingRepository ratingRepository;
+    private final CartRepository cartRepository;
+    private final CartItemsRepository cartItemsRepository;
+    private final WishlistRepository wishlistRepository;
+    private final WishlistItemsRepository wishlistItemsRepository;
+    private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
+    private final SessionRepository sessionRepository;
+    @Autowired
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, UserRepository userRepository, RatingRepository ratingRepository, CartRepository cartRepository, CartItemsRepository cartItemsRepository, WishlistRepository wishlistRepository, WishlistItemsRepository wishlistItemsRepository, SessionRepository sessionRepository) {
+        this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
+        this.userRepository = userRepository;
+        this.ratingRepository = ratingRepository;
+        this.cartRepository = cartRepository;
+        this.cartItemsRepository = cartItemsRepository;
+        this.wishlistRepository = wishlistRepository;
+        this.wishlistItemsRepository = wishlistItemsRepository;
+        this.sessionRepository = sessionRepository;
+    }
 
-    private CategoryRepository categoryRepository;
-    private UserRepository userRepository;
+    public List<Product> getAllProducts() {
+        List<Product> products = productRepository.getAll();
+        return products;
+    }
 
+    public List<String> getAllCategories() {
+        List<String> categories = productRepository.getAllCat();
+        return categories;
+    }
 
+    public Product getSingleProduct(Long id) {
+        Optional<Product> optionalProduct = productRepository.getProduct(id);
 
-       public List<Product> getAllProducts(){
-           List<Product> products = productRepository.getAll();
-           return products;
-       }
+        Product product = optionalProduct.get();
+        return product;
+    }
 
-    public List<String> getAllCategories(){
-           List<String> categories = productRepository.getAllCat();
-           return categories;
-       }
-       public Product getSingleProduct(Long id){
-           Optional<Product> optionalProduct = productRepository.getProduct(id);
+    public Category getSingleCategory(Long id) {
+        Optional<Category> optionalCategory = categoryRepository.getCategory(id);
 
-           Product product = optionalProduct.get();
-           return product;
-       }
-       public Category getSingleCategory(Long id){
-           Optional<Category> optionalCategory = categoryRepository.getCategory(id);
+        Category category = optionalCategory.get();
+        return category;
+    }
 
-           Category category = optionalCategory.get();
-           return category;
-       }
+    public Product addProduct(Product product) {
+        Product product1 = productRepository.save(product);
+        return product1;
+    }
 
-       public Product addProduct(Product product){
-           Product product1 = productRepository.save(product);
-           return product1;
-       }
+    public List<Product> getProductByCategory(Long id) {
+        List<Product> products = productRepository.getProductsByCategory(id);
+        return products;
+    }
 
-       public List<Product> getProductByCategory(Long id){
-           List<Product> products = productRepository.getProductsByCategory(id);
-           return products;
-       }
+    public List<Category> getAllCategory() {
+        List<Category> categories = categoryRepository.getAllCategories();
+        return categories;
+    }
 
-       public  List<Category> getAllCategory(){
-           List<Category> categories = categoryRepository.getAllCategories();
-           return categories;
-       }
+    public User addUser(User user) {
+        User user1 = userRepository.save(user);
+        return user1;
+    }
 
-       public User addUser(User user){
-           User user1 = userRepository.save(user);
-           return user1;
-       }
+    public User getUserDetails(Long id) {
+        User user = userRepository.getUserDetails(id);
+        return user;
+    }
 
-   public User getUserDetails(Long id){
-           User user = userRepository.getUserDetails(id);
-           return user;
-       }
+    public User getUserByUserName(User user) {
+        User user1 = userRepository.getUserByUserName(user.getUserName());
+        return user1;
+    }
 
-        public User getUserByUserName(User user){
-           User user1 = userRepository.getUserByUserName(user.getUserName());
-           return user1;
-       }
+public LoginResponseDto login(LoginRequestDto loginRequestDto) throws Exception {
+        User user = userRepository.getUserByUserName(loginRequestDto.getUserName());
+        if(user.getPassword().equals(loginRequestDto.getPassword())){
 
-       public Rating getProductRating(Long id){
-           Optional<Rating> optionalRating = ratingRepository.getProductRating(id);
-           Rating rating = optionalRating.get();
-           return rating;
-       }
+            Session session = new Session(
+                    UniqueHelper.getSessionId(),
+                    user.getId(),
+                    UtilityHelper.getCurrentMillis() + TimeUnit.DAYS.toMillis(2)
 
-       public Cart getOrCreateCart(Long userId){
-           Cart existingCart = cartRepository.findByUserIdAndStatus(userId,"active");
-           if(existingCart != null){
-               return existingCart;
-           }
+            );
+            Session ses = sessionRepository.save(session);
+            return new LoginResponseDto(ses.getSessionId(),ses.getExpiresAt(), user.getId());
+        }else throw new Exception("Invalid Credientials");
+    }
 
-           Cart cart = new Cart();
-           cart.setUserId(userId);
-           cart.setStatus("active");
-           return cartRepository.save(cart);
-       }
+    public Rating getProductRating(Long id) {
+        Optional<Rating> optionalRating = ratingRepository.getProductRating(id);
+        Rating rating = optionalRating.get();
+        return rating;
+    }
 
-       public CartItems addCartItem(Long cartId, Long productId, int quantity){
-           if (cartId == null || productId == null) {
-               throw new IllegalArgumentException("Cart ID and Product ID cannot be null");
-           }
+    public Cart getOrCreateCart(Long userId) {
+        Cart existingCart = cartRepository.findByUserIdAndStatus(userId, "active");
+        if (existingCart != null) {
+            return existingCart;
+        }
 
-           if (!cartRepository.existsById(cartId)) {
-               throw new IllegalArgumentException("Cart does not exist for ID: " + cartId);
-           }
+        Cart cart = new Cart();
+        cart.setUserId(userId);
+        cart.setStatus("active");
+        return cartRepository.save(cart);
+    }
 
-           if (!productRepository.existsById(productId)) {
-               throw new IllegalArgumentException("Product does not exist for ID: " + productId);
-           }
+    public CartItems addCartItem(Long cartId, Long productId, int quantity) {
+        if (cartId == null || productId == null) {
+            throw new IllegalArgumentException("Cart ID and Product ID cannot be null");
+        }
 
-           CartItems cartItems = new CartItems();
-           cartItems.setCart_id(cartId);
-           cartItems.setProductId(productId);
-           cartItems.setQuantity(quantity);
-           return cartItemsRepository.save(cartItems);
-       }
+        if (!cartRepository.existsById(cartId)) {
+            throw new IllegalArgumentException("Cart does not exist for ID: " + cartId);
+        }
 
-       public List<CartItems> getCartItemsByCartId(Long cartId){
-           List<CartItems> cartItems = cartItemsRepository.findByCartId(cartId);
-           return cartItems;
-       }
-       public CartItems getCartItem(Long cartId,Long productId){
-           CartItems cartItem = cartItemsRepository.findByCartIdAndProductId(cartId,productId);
-           return cartItem;
-       }
+        if (!productRepository.existsById(productId)) {
+            throw new IllegalArgumentException("Product does not exist for ID: " + productId);
+        }
 
-       public void removeFromCart(Long productId){
-           cartItemsRepository.removeFromCart(productId);
-       }
+        CartItems cartItems = new CartItems();
+        cartItems.setCart_id(cartId);
+        cartItems.setProductId(productId);
+        cartItems.setQuantity(quantity);
+        return cartItemsRepository.save(cartItems);
+    }
 
-       public void increment(Long productId){
-           cartItemsRepository.increment(productId);
-       }
+    public List<CartItems> getCartItemsByCartId(Long cartId) {
+        List<CartItems> cartItems = cartItemsRepository.findByCartId(cartId);
+        return cartItems;
+    }
 
-       public void decrement(Long productId){
-           cartItemsRepository.decrement(productId);
-       }
+    public CartItems getCartItem(Long cartId, Long productId) {
+        CartItems cartItem = cartItemsRepository.findByCartIdAndProductId(cartId, productId);
+        return cartItem;
+    }
 
-       public Wishlist getOrCreateWishlist(Long userId){
-           Wishlist existingWishlist = wishlistRepository.findWishlistByUserId(userId);
-           if(existingWishlist != null){
-               return existingWishlist;
-           }
-           Wishlist wishlist = new Wishlist();
-           wishlist.setUserId(userId);
-           return wishlistRepository.save(wishlist);
-       }
+    public void removeFromCart(Long productId) {
+        cartItemsRepository.removeFromCart(productId);
+    }
 
-       public WishlistItems addWishlistItem(Long wishlistId,Long productId){
-           WishlistItems wishlistItem = new WishlistItems();
-           wishlistItem.setProductId(productId);
-           wishlistItem.setWishListId(wishlistId);
-           return wishlistItemsRepository.save(wishlistItem);
-       }
+    public void increment(Long productId) {
+        cartItemsRepository.increment(productId);
+    }
 
-       public List<WishlistItems> getWishlistItemsByWishId(Long wishlistId){
-           List<WishlistItems> wishlistItems = wishlistItemsRepository.getWishlistItemsByWishlistId(wishlistId);
-           return wishlistItems;
-       }
+    public void decrement(Long productId) {
+        cartItemsRepository.decrement(productId);
+    }
+
+    public Wishlist getOrCreateWishlist(Long userId) {
+        Wishlist existingWishlist = wishlistRepository.findWishlistByUserId(userId);
+        if (existingWishlist != null) {
+            return existingWishlist;
+        }
+        Wishlist wishlist = new Wishlist();
+        wishlist.setUserId(userId);
+        return wishlistRepository.save(wishlist);
+    }
+
+    public WishlistItems addWishlistItem(Long wishlistId, Long productId) {
+        WishlistItems wishlistItem = new WishlistItems();
+        wishlistItem.setProductId(productId);
+        wishlistItem.setWishListId(wishlistId);
+        return wishlistItemsRepository.save(wishlistItem);
+    }
+
+    public List<WishlistItems> getWishlistItemsByWishId(Long wishlistId) {
+        List<WishlistItems> wishlistItems = wishlistItemsRepository.getWishlistItemsByWishlistId(wishlistId);
+        return wishlistItems;
+    }
 }

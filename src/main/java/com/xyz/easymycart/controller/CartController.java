@@ -23,9 +23,23 @@ public class CartController {
         this.productService = productService;
     }
 
+//    @GetMapping("/")
+//    public Cart getOrCreateCart(HttpSession session) {
+//        Long userId = (Long) session.getAttribute("user_id");
+//
+//        if (userId == null) {
+//            throw new RuntimeException("User not logged in. Cannot create or retrieve cart.");
+//        }
+//
+//        System.out.println("User ID from session: " + userId);
+//
+//        Cart cart = productService.getOrCreateCart(userId);
+//        return cart;
+//    }
+
     @GetMapping("/")
-    public Cart getOrCreateCart(HttpSession session) {
-        Long userId = (Long) session.getAttribute("user_id");
+    public Cart getOrCreateCart(@RequestHeader("userId") Long userId) {
+//        Long userId = (Long) session.getAttribute("user_id");
 
         if (userId == null) {
             throw new RuntimeException("User not logged in. Cannot create or retrieve cart.");

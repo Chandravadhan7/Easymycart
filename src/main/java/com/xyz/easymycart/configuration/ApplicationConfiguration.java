@@ -1,16 +1,28 @@
 package com.xyz.easymycart.configuration;
 
 //import com.xyz.easymycart.filters.MyFilter;
+import com.xyz.easymycart.filters.MyFilter;
+import com.xyz.easymycart.repository.SessionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.time.Duration;
 
 @Configuration
 public class ApplicationConfiguration {
+
+    private final SessionRepository sessionRepository;
+
+    @Autowired
+    public ApplicationConfiguration(SessionRepository sessionRepository) {
+        this.sessionRepository = sessionRepository;
+    }
 
     @Bean
     public RestTemplate createBean(){
@@ -21,12 +33,22 @@ public class ApplicationConfiguration {
 
     }
 
-//    @Bean
-//    public FilterRegistrationBean<MyFilter> myFilterRegistrationBean() {
-//        FilterRegistrationBean<MyFilter> registrationBean = new FilterRegistrationBean<>();
-//        registrationBean.setFilter(new MyFilter());
-//        registrationBean.addUrlPatterns("/api/*"); // Apply filter to specific URL patterns
-//        registrationBean.setOrder(1); // Set filter order
-//        return registrationBean;
-//    }
+    @Bean
+    public FilterRegistrationBean<MyFilter> myFilterRegistrationBean() {
+        FilterRegistrationBean<MyFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new MyFilter(sessionRepository));
+        registrationBean.addUrlPatterns("/*"); // Apply filter to specific URL patterns
+        registrationBean.setOrder(1); // Set filter order
+        return registrationBean;
+    }
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(final CorsRegistry registry) {
+                registry.addMapping("/**").allowedMethods("*").allowedHeaders("*");
+            }
+        };
+    }
 }

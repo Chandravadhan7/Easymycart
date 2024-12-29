@@ -1,6 +1,8 @@
 package com.xyz.easymycart.controller;
 
 import com.xyz.easymycart.model.User;
+import com.xyz.easymycart.request.LoginRequestDto;
+import com.xyz.easymycart.response.LoginResponseDto;
 import com.xyz.easymycart.service.ProductService;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +13,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("user")
-@CrossOrigin(origins = "http://localhost:3000",allowCredentials = "true")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
     private ProductService productService;
 
@@ -26,16 +28,22 @@ public class UserController {
         return user;
     }
 
-    @PostMapping("/login")
-    public User login(@RequestBody User user, HttpSession session ){
-        User user1 = productService.getUserByUserName(user);
+//    @PostMapping("/login")
+//    public User login(@RequestBody User user, HttpSession session ){
+//        User user1 = productService.getUserByUserName(user);
+//
+//        if (user1 != null) {
+//            session.setAttribute("user_id", user1.getId());
+//            System.out.println("User ID set in session: " + user1.getId());
+//            return user1;
+//        } else {
+//            throw new RuntimeException("Invalid user credentials");
+//        }
+//    }
 
-        if (user1 != null) {
-            session.setAttribute("user_id", user1.getId());
-            System.out.println("User ID set in session: " + user1.getId());
-            return user1;
-        } else {
-            throw new RuntimeException("Invalid user credentials");
-        }
+    @PostMapping("/api/login")
+    public LoginResponseDto login(@RequestBody LoginRequestDto loginRequestDto) throws Exception {
+        return productService.login(loginRequestDto);
+
     }
 }
