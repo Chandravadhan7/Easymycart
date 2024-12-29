@@ -4,7 +4,7 @@ import java.time.Instant;
 
 public class UtilityHelper {
 
-    public static Long getCurrentMillis(){
-       return Instant.now().toEpochMilli();
-    }
+  public static Long getCurrentMillis() {
+    return Instant.now().toEpochMilli();
+  }
 }

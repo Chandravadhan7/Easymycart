@@ -2,90 +2,86 @@ package com.xyz.easymycart.controller;
 
 import com.xyz.easymycart.model.Cart;
 import com.xyz.easymycart.model.CartItems;
-import com.xyz.easymycart.model.Product;
 import com.xyz.easymycart.service.ProductService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
-import java.util.List;
-
-@CrossOrigin(origins = "http://localhost:3000",allowCredentials = "true")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RestController
 @RequestMapping("cart")
 public class CartController {
-    private ProductService productService;
+  private ProductService productService;
 
-    @Autowired
-    public CartController(ProductService productService) {
-        this.productService = productService;
+  @Autowired
+  public CartController(ProductService productService) {
+    this.productService = productService;
+  }
+
+  //    @GetMapping("/")
+  //    public Cart getOrCreateCart(HttpSession session) {
+  //        Long userId = (Long) session.getAttribute("user_id");
+  //
+  //        if (userId == null) {
+  //            throw new RuntimeException("User not logged in. Cannot create or retrieve cart.");
+  //        }
+  //
+  //        System.out.println("User ID from session: " + userId);
+  //
+  //        Cart cart = productService.getOrCreateCart(userId);
+  //        return cart;
+  //    }
+
+  @GetMapping("/")
+  public Cart getOrCreateCart(@RequestHeader("userId") Long userId) {
+    //        Long userId = (Long) session.getAttribute("user_id");
+
+    if (userId == null) {
+      throw new RuntimeException("User not logged in. Cannot create or retrieve cart.");
     }
 
-//    @GetMapping("/")
-//    public Cart getOrCreateCart(HttpSession session) {
-//        Long userId = (Long) session.getAttribute("user_id");
-//
-//        if (userId == null) {
-//            throw new RuntimeException("User not logged in. Cannot create or retrieve cart.");
-//        }
-//
-//        System.out.println("User ID from session: " + userId);
-//
-//        Cart cart = productService.getOrCreateCart(userId);
-//        return cart;
-//    }
+    System.out.println("User ID from session: " + userId);
 
-    @GetMapping("/")
-    public Cart getOrCreateCart(@RequestHeader("userId") Long userId) {
-//        Long userId = (Long) session.getAttribute("user_id");
+    Cart cart = productService.getOrCreateCart(userId);
+    return cart;
+  }
 
-        if (userId == null) {
-            throw new RuntimeException("User not logged in. Cannot create or retrieve cart.");
-        }
+  @PostMapping("/{cartId}/cartitems")
+  public CartItems addCartItem(
+      @PathVariable("cartId") Long cartId,
+      @RequestParam("product_id") Long productId,
+      @RequestParam("quantity") int quantity) {
+    return productService.addCartItem(cartId, productId, quantity);
+  }
 
-        System.out.println("User ID from session: " + userId);
+  @GetMapping("/{cartId}")
+  public List<CartItems> getCartItems(@PathVariable("cartId") Long cartId) {
+    List<CartItems> cartItems = productService.getCartItemsByCartId(cartId);
+    return cartItems;
+  }
 
-        Cart cart = productService.getOrCreateCart(userId);
-        return cart;
-    }
+  @GetMapping("/{cartId}/{productId}")
+  public CartItems getCartItem(
+      @PathVariable("cartId") Long cartId, @PathVariable("productId") Long productId) {
+    CartItems cartItem = productService.getCartItem(cartId, productId);
+    return cartItem;
+  }
 
-    @PostMapping("/{cartId}/cartitems")
-    public CartItems addCartItem(
-            @PathVariable("cartId") Long cartId,
-            @RequestParam("product_id") Long productId,
-            @RequestParam("quantity") int quantity) {
-        return productService.addCartItem(cartId, productId, quantity);
-    }
+  @DeleteMapping("/{productId}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void removeFromCart(@PathVariable("productId") Long productId) {
+    productService.removeFromCart(productId);
+  }
 
-    @GetMapping("/{cartId}")
-    public List<CartItems> getCartItems(@PathVariable("cartId") Long cartId){
-        List<CartItems> cartItems= productService.getCartItemsByCartId(cartId);
-        return cartItems;
-    }
+  @PatchMapping("/cartitems/{productId}/increment")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  void increment(@PathVariable("productId") Long productId) {
+    productService.increment(productId);
+  }
 
-    @GetMapping("/{cartId}/{productId}")
-    public CartItems getCartItem(@PathVariable("cartId") Long cartId,@PathVariable("productId") Long productId){
-        CartItems cartItem = productService.getCartItem(cartId,productId);
-        return cartItem;
-    }
-
-    @DeleteMapping("/{productId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeFromCart(@PathVariable("productId") Long productId){
-        productService.removeFromCart(productId);
-    }
-
-    @PatchMapping("/cartitems/{productId}/increment")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    void increment(@PathVariable("productId") Long productId){
-        productService.increment(productId);
-    }
-
-    @PatchMapping("cartitems/{productId}/decrement")
-    void decrement(@PathVariable("productId") Long productId){
-        productService.decrement(productId);
-    }
-
+  @PatchMapping("cartitems/{productId}/decrement")
+  void decrement(@PathVariable("productId") Long productId) {
+    productService.decrement(productId);
+  }
 }

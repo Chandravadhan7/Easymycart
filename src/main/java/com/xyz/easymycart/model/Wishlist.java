@@ -1,39 +1,37 @@
 package com.xyz.easymycart.model;
 
-
-
 import javax.persistence.*;
 
 @Entity
 @Table(name = "wishlist")
 public class Wishlist {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    @Column(name = "user_id",nullable = false)
-    private Long userId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Long id;
 
-    public Wishlist(Long id, Long userId) {
-        this.id = id;
-        this.userId = userId;
-    }
-    public Wishlist(){
+  @Column(name = "user_id", nullable = false)
+  private Long userId;
 
-    }
+  public Wishlist(Long id, Long userId) {
+    this.id = id;
+    this.userId = userId;
+  }
 
-    public Long getId() {
-        return id;
-    }
+  public Wishlist() {}
 
-    public Long getUserId() {
-        return userId;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public Long getUserId() {
+    return userId;
+  }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public void setUserId(Long userId) {
+    this.userId = userId;
+  }
 }

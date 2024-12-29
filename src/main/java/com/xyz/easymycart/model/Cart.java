@@ -1,50 +1,48 @@
 package com.xyz.easymycart.model;
 
-
-
 import javax.persistence.*;
 
 @Entity
 @Table(name = "cart")
 public class Cart {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
-    private String status;
-    public Cart(){
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Long id;
 
-    }
-    public Cart(Long id, Long userId, String status) {
-        this.id = id;
-        this.userId = userId;
-        this.status = status;
-    }
+  @Column(name = "user_id", nullable = false)
+  private Long userId;
 
+  private String status;
 
+  public Cart() {}
 
-    public String getStatus() {
-        return status;
-    }
+  public Cart(Long id, Long userId, String status) {
+    this.id = id;
+    this.userId = userId;
+    this.status = status;
+  }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+  public String getStatus() {
+    return status;
+  }
 
-    public Long getUserId() {
-        return userId;
-    }
+  public void setStatus(String status) {
+    this.status = status;
+  }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
+  public Long getUserId() {
+    return userId;
+  }
 
-    public Long getId() {
-        return id;
-    }
+  public void setUserId(Long userId) {
+    this.userId = userId;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
 }

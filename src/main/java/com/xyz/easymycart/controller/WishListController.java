@@ -3,37 +3,36 @@ package com.xyz.easymycart.controller;
 import com.xyz.easymycart.model.Wishlist;
 import com.xyz.easymycart.model.WishlistItems;
 import com.xyz.easymycart.service.ProductService;
+import java.util.List;
+import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
-import java.util.List;
-
-@CrossOrigin(origins = "http://localhost:3000",allowCredentials = "true")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RestController
 @RequestMapping("/wishlist")
 public class WishListController {
-    @Autowired
-    private ProductService productService;
+  @Autowired private ProductService productService;
 
-    @GetMapping("/")
-    public Wishlist getOrCreateWishlist(HttpSession session){
-        Long userId = (Long) session.getAttribute("user_id");
+  @GetMapping("/")
+  public Wishlist getOrCreateWishlist(HttpSession session) {
+    Long userId = (Long) session.getAttribute("user_id");
 
-        System.out.println("User ID from session: " + userId);
-        Wishlist wishlist = productService.getOrCreateWishlist(userId);
-        return wishlist;
-    }
+    System.out.println("User ID from session: " + userId);
+    Wishlist wishlist = productService.getOrCreateWishlist(userId);
+    return wishlist;
+  }
 
-    @PostMapping("/{wishlistId}/wishlistitems")
-    public WishlistItems addWishListItems(@PathVariable("wishlistId") Long wishlistId,@RequestParam Long productId){
-        WishlistItems wishlistItems = productService.addWishlistItem(wishlistId,productId);
-        return wishlistItems;
-    }
+  @PostMapping("/{wishlistId}/wishlistitems")
+  public WishlistItems addWishListItems(
+      @PathVariable("wishlistId") Long wishlistId, @RequestParam Long productId) {
+    WishlistItems wishlistItems = productService.addWishlistItem(wishlistId, productId);
+    return wishlistItems;
+  }
 
-    @GetMapping("/{wishlistId}")
-    public List<WishlistItems> getWishlistItemsByWishId(@PathVariable("wishlistId") Long wishlistId){
-        List<WishlistItems> wishlistItems = productService.getWishlistItemsByWishId(wishlistId);
-        return wishlistItems;
-    }
+  @GetMapping("/{wishlistId}")
+  public List<WishlistItems> getWishlistItemsByWishId(@PathVariable("wishlistId") Long wishlistId) {
+    List<WishlistItems> wishlistItems = productService.getWishlistItemsByWishId(wishlistId);
+    return wishlistItems;
+  }
 }

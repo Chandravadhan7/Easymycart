@@ -7,10 +7,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CartRepository extends JpaRepository<Cart,Long> {
+public interface CartRepository extends JpaRepository<Cart, Long> {
 
-    Cart save(Cart cart);
+  Cart save(Cart cart);
 
-    @Query(value = "select * from cart c where c.user_id = :userId and c.status = :string",nativeQuery = true)
-    Cart findByUserIdAndStatus(@Param("userId") Long userId,@Param("string") String string);
+  @Query(
+      value = "select * from cart c where c.user_id = :userId and c.status = :string",
+      nativeQuery = true)
+  Cart findByUserIdAndStatus(@Param("userId") Long userId, @Param("string") String string);
 }

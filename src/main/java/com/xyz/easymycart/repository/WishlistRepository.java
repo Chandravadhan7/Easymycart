@@ -7,9 +7,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface WishlistRepository extends JpaRepository<Wishlist,Long> {
-    Wishlist save(Wishlist wishlist);
+public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
+  Wishlist save(Wishlist wishlist);
 
-    @Query(value = "select * from wishlist w where w.user_id = :userId",nativeQuery = true)
-    Wishlist findWishlistByUserId(@Param("userId") Long userId);
+  @Query(value = "select * from wishlist w where w.user_id = :userId", nativeQuery = true)
+  Wishlist findWishlistByUserId(@Param("userId") Long userId);
 }

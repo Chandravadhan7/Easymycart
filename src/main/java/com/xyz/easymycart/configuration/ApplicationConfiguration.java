@@ -1,8 +1,9 @@
 package com.xyz.easymycart.configuration;
 
-//import com.xyz.easymycart.filters.MyFilter;
+// import com.xyz.easymycart.filters.MyFilter;
 import com.xyz.easymycart.filters.MyFilter;
 import com.xyz.easymycart.repository.SessionRepository;
+import java.time.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -12,43 +13,40 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.time.Duration;
-
 @Configuration
 public class ApplicationConfiguration {
 
-    private final SessionRepository sessionRepository;
+  private final SessionRepository sessionRepository;
 
-    @Autowired
-    public ApplicationConfiguration(SessionRepository sessionRepository) {
-        this.sessionRepository = sessionRepository;
-    }
+  @Autowired
+  public ApplicationConfiguration(SessionRepository sessionRepository) {
+    this.sessionRepository = sessionRepository;
+  }
 
-    @Bean
-    public RestTemplate createBean(){
-        return new RestTemplateBuilder()
-                .setConnectTimeout(Duration.ofSeconds(5))
-                .setReadTimeout(Duration.ofSeconds(5))
-                .build();
+  @Bean
+  public RestTemplate createBean() {
+    return new RestTemplateBuilder()
+        .setConnectTimeout(Duration.ofSeconds(5))
+        .setReadTimeout(Duration.ofSeconds(5))
+        .build();
+  }
 
-    }
+  @Bean
+  public FilterRegistrationBean<MyFilter> myFilterRegistrationBean() {
+    FilterRegistrationBean<MyFilter> registrationBean = new FilterRegistrationBean<>();
+    registrationBean.setFilter(new MyFilter(sessionRepository));
+    registrationBean.addUrlPatterns("/*"); // Apply filter to specific URL patterns
+    registrationBean.setOrder(1); // Set filter order
+    return registrationBean;
+  }
 
-    @Bean
-    public FilterRegistrationBean<MyFilter> myFilterRegistrationBean() {
-        FilterRegistrationBean<MyFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new MyFilter(sessionRepository));
-        registrationBean.addUrlPatterns("/*"); // Apply filter to specific URL patterns
-        registrationBean.setOrder(1); // Set filter order
-        return registrationBean;
-    }
-
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(final CorsRegistry registry) {
-                registry.addMapping("/**").allowedMethods("*").allowedHeaders("*");
-            }
-        };
-    }
+  @Bean
+  public WebMvcConfigurer corsConfigurer() {
+    return new WebMvcConfigurer() {
+      @Override
+      public void addCorsMappings(final CorsRegistry registry) {
+        registry.addMapping("/**").allowedMethods("*").allowedHeaders("*");
+      }
+    };
+  }
 }
