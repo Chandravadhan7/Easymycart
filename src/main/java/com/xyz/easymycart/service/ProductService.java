@@ -23,18 +23,19 @@ public class ProductService {
   private final CategoryRepository categoryRepository;
   private final UserRepository userRepository;
   private final SessionRepository sessionRepository;
+  private final OrderRepository orderRepository;
 
   @Autowired
   public ProductService(
-      ProductRepository productRepository,
-      CategoryRepository categoryRepository,
-      UserRepository userRepository,
-      RatingRepository ratingRepository,
-      CartRepository cartRepository,
-      CartItemsRepository cartItemsRepository,
-      WishlistRepository wishlistRepository,
-      WishlistItemsRepository wishlistItemsRepository,
-      SessionRepository sessionRepository) {
+          ProductRepository productRepository,
+          CategoryRepository categoryRepository,
+          UserRepository userRepository,
+          RatingRepository ratingRepository,
+          CartRepository cartRepository,
+          CartItemsRepository cartItemsRepository,
+          WishlistRepository wishlistRepository,
+          WishlistItemsRepository wishlistItemsRepository,
+          SessionRepository sessionRepository, OrderRepository orderRepository) {
     this.productRepository = productRepository;
     this.categoryRepository = categoryRepository;
     this.userRepository = userRepository;
@@ -44,6 +45,7 @@ public class ProductService {
     this.wishlistRepository = wishlistRepository;
     this.wishlistItemsRepository = wishlistItemsRepository;
     this.sessionRepository = sessionRepository;
+      this.orderRepository = orderRepository;
   }
 
   public List<Product> getAllProducts() {
@@ -133,6 +135,11 @@ public class ProductService {
     return cartRepository.save(cart);
   }
 
+  public void updateStatus(Long cartId,String status){
+    cartRepository.updateStatus(cartId,status);
+    return;
+  }
+
   public CartItems addCartItem(Long cartId, Long productId, int quantity) {
     if (cartId == null || productId == null) {
       throw new IllegalArgumentException("Cart ID and Product ID cannot be null");
@@ -196,5 +203,16 @@ public class ProductService {
     List<WishlistItems> wishlistItems =
         wishlistItemsRepository.getWishlistItemsByWishlistId(wishlistId);
     return wishlistItems;
+  }
+
+  public  Order addOrder(Long cartId,Long userId){
+
+    Order order = new Order();
+    order.setOrderId(UniqueHelper.getOrderID());
+    order.setUserId(userId);
+    order.setCartId(cartId);
+    order.setDeliveredOn(UtilityHelper.getCurrentMillis());
+    return orderRepository.save(order);
+
   }
 }

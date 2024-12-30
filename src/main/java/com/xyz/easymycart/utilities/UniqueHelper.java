@@ -8,6 +8,8 @@ public class UniqueHelper {
     return getId("SESN");
   }
 
+  public static String getOrderID(){return getId("ORDR");}
+
   private static String getId(String prefix) {
     UUID uuid = UUID.randomUUID();
     String uuidAsString = uuid.toString();

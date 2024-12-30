@@ -84,4 +84,10 @@ public class CartController {
   void decrement(@PathVariable("productId") Long productId) {
     productService.decrement(productId);
   }
+
+  @PatchMapping("{cartId}/status")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  void updateStatus(@PathVariable("cartId") Long cartId,String status){
+      productService.updateStatus(cartId,"completed");
+  }
 }
