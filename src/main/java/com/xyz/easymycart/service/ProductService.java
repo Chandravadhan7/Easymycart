@@ -110,11 +110,20 @@ public class ProductService {
           new Session(
               UniqueHelper.getSessionId(),
               user.getId(),
-              UtilityHelper.getCurrentMillis() + TimeUnit.DAYS.toMillis(2));
+              UtilityHelper.getCurrentMillis() + TimeUnit.DAYS.toMillis(2),false);
 
       Session ses = sessionRepository.save(session);
       return new LoginResponseDto(ses.getSessionId(), ses.getExpiresAt(), user.getId());
     } else throw new Exception("Invalid Credientials");
+  }
+
+  public Session getValidSession(String sessionId) throws Exception {
+    Long currentTime = System.currentTimeMillis();
+    Session session = sessionRepository.findBySessionIdAndIsDeletedFalseAndExpiresAtGreaterThan(sessionId,currentTime);
+    if(session == null){
+      throw new Exception("Invalid or expired session");
+    }
+    return session;
   }
 
   public Rating getProductRating(Long id) {

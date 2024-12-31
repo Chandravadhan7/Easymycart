@@ -10,4 +10,7 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
 
   @Query(value = "select * from session s where s.session_id = :sessionId", nativeQuery = true)
   Session getBySessionId(@Param("sessionId") String sessionId);
+
+  @Query(value = "select * from session s where s.session_id = :sessionId and s.expires_at > :currentTime and s.is_deleted = FALSE",nativeQuery = true)
+  Session findBySessionIdAndIsDeletedFalseAndExpiresAtGreaterThan(@Param("sessionId") String sessionId,@Param("currentTime") Long currentTime);
 }
