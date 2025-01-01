@@ -114,7 +114,7 @@ public class ProductService {
 
       Session ses = sessionRepository.save(session);
       return new LoginResponseDto(ses.getSessionId(), ses.getExpiresAt(), user.getId());
-    } else throw new Exception("Invalid Credientials");
+    } else throw new Exception("Invalid credits");
   }
 
   public Session getValidSession(String sessionId) throws Exception {
