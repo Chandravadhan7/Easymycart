@@ -27,15 +27,16 @@ public class ProductService {
 
   @Autowired
   public ProductService(
-          ProductRepository productRepository,
-          CategoryRepository categoryRepository,
-          UserRepository userRepository,
-          RatingRepository ratingRepository,
-          CartRepository cartRepository,
-          CartItemsRepository cartItemsRepository,
-          WishlistRepository wishlistRepository,
-          WishlistItemsRepository wishlistItemsRepository,
-          SessionRepository sessionRepository, OrderRepository orderRepository) {
+      ProductRepository productRepository,
+      CategoryRepository categoryRepository,
+      UserRepository userRepository,
+      RatingRepository ratingRepository,
+      CartRepository cartRepository,
+      CartItemsRepository cartItemsRepository,
+      WishlistRepository wishlistRepository,
+      WishlistItemsRepository wishlistItemsRepository,
+      SessionRepository sessionRepository,
+      OrderRepository orderRepository) {
     this.productRepository = productRepository;
     this.categoryRepository = categoryRepository;
     this.userRepository = userRepository;
@@ -45,7 +46,7 @@ public class ProductService {
     this.wishlistRepository = wishlistRepository;
     this.wishlistItemsRepository = wishlistItemsRepository;
     this.sessionRepository = sessionRepository;
-      this.orderRepository = orderRepository;
+    this.orderRepository = orderRepository;
   }
 
   public List<Product> getAllProducts() {
@@ -110,7 +111,8 @@ public class ProductService {
           new Session(
               UniqueHelper.getSessionId(),
               user.getId(),
-              UtilityHelper.getCurrentMillis() + TimeUnit.DAYS.toMillis(2),false);
+              UtilityHelper.getCurrentMillis() + TimeUnit.DAYS.toMillis(1),
+              "active");
 
       Session ses = sessionRepository.save(session);
       return new LoginResponseDto(ses.getSessionId(), ses.getExpiresAt(), user.getId());
@@ -119,11 +121,19 @@ public class ProductService {
 
   public Session getValidSession(String sessionId) throws Exception {
     Long currentTime = System.currentTimeMillis();
-    Session session = sessionRepository.findBySessionIdAndIsDeletedFalseAndExpiresAtGreaterThan(sessionId,currentTime);
-    if(session == null){
+    Session session =
+        sessionRepository.findBySessionIdAndStatusAndExpiresAtGreaterThan(sessionId, currentTime);
+    if (session == null) {
       throw new Exception("Invalid or expired session");
     }
     return session;
+  }
+
+  public void logout(String sessionId) {
+    Session session = sessionRepository.findByValueAndStatus(sessionId, "active");
+    session.setStatus("logged out");
+    sessionRepository.save(session);
+    return;
   }
 
   public Rating getProductRating(Long id) {
@@ -144,8 +154,8 @@ public class ProductService {
     return cartRepository.save(cart);
   }
 
-  public void updateStatus(Long cartId,String status){
-    cartRepository.updateStatus(cartId,status);
+  public void updateStatus(Long cartId, String status) {
+    cartRepository.updateStatus(cartId, status);
     return;
   }
 
@@ -214,7 +224,7 @@ public class ProductService {
     return wishlistItems;
   }
 
-  public  Order addOrder(Long cartId,Long userId){
+  public Order addOrder(Long cartId, Long userId) {
 
     Order order = new Order();
     order.setOrderId(UniqueHelper.getOrderID());
@@ -222,6 +232,5 @@ public class ProductService {
     order.setCartId(cartId);
     order.setDeliveredOn(UtilityHelper.getCurrentMillis());
     return orderRepository.save(order);
-
   }
 }

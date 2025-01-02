@@ -8,15 +8,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/order")
 public class OrderController {
 
-    private ProductService productService;
+  private ProductService productService;
 
-    public OrderController(ProductService productService){
-        this.productService = productService;
-    }
+  public OrderController(ProductService productService) {
+    this.productService = productService;
+  }
 
-    @PostMapping("/{cartId}")
-    public Order addOrder(@RequestHeader Long userId, @PathVariable("cartId") Long cartId){
-        Order order = productService.addOrder(cartId,userId);
-        return order;
-    }
+  @PostMapping("/{cartId}")
+  public Order addOrder(@RequestHeader Long userId, @PathVariable("cartId") Long cartId) {
+    Order order = productService.addOrder(cartId, userId);
+    return order;
+  }
 }

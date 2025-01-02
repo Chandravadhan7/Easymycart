@@ -45,14 +45,18 @@ public class UserController {
     return productService.login(loginRequestDto);
   }
 
-  @PostMapping("/api/refresh-session")
-  public ResponseEntity<?> performAction(@RequestHeader("sessionId") String sessionId){
-    try{
-      Session session = productService.getValidSession(sessionId);
+  @PostMapping("/api/logout")
+  public ResponseEntity<Void> logout(@RequestHeader("sessionId") String sessionId) {
+    productService.logout(sessionId);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 
-      return ResponseEntity.ok("Action performed successfully");
-    }catch (Exception e){
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired session");
-    }
+  @PostMapping("/api/validate")
+  public Session protectedEndpoint(@RequestHeader("sessionId") String sessionId) throws Exception {
+
+    // Validate the session
+    Session session = productService.getValidSession(sessionId);
+
+    return session;
   }
 }

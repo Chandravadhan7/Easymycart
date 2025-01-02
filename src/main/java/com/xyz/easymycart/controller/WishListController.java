@@ -4,7 +4,6 @@ import com.xyz.easymycart.model.Wishlist;
 import com.xyz.easymycart.model.WishlistItems;
 import com.xyz.easymycart.service.ProductService;
 import java.util.List;
-import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,8 +14,8 @@ public class WishListController {
   @Autowired private ProductService productService;
 
   @GetMapping("/")
-  public Wishlist getOrCreateWishlist( @RequestHeader Long userId) {
-//    Long userId = (Long) session.getAttribute("user_id");
+  public Wishlist getOrCreateWishlist(@RequestHeader Long userId) {
+    //    Long userId = (Long) session.getAttribute("user_id");
 
     System.out.println("User ID from session: " + userId);
     Wishlist wishlist = productService.getOrCreateWishlist(userId);

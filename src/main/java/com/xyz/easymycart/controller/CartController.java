@@ -87,7 +87,7 @@ public class CartController {
 
   @PatchMapping("{cartId}/status")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  void updateStatus(@PathVariable("cartId") Long cartId,String status){
-      productService.updateStatus(cartId,"completed");
+  void updateStatus(@PathVariable("cartId") Long cartId, String status) {
+    productService.updateStatus(cartId, "completed");
   }
 }

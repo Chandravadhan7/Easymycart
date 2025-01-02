@@ -18,14 +18,14 @@ public class Session {
   @Column(name = "expires_at", nullable = false)
   private Long expiresAt;
 
-  @Column(name="is_deleted")
-  private boolean isDeleted=false;
+  @Column(name = "status")
+  private String status;
 
-  public Session(String sessionId, Long userId, Long expiresAt, boolean isDeleted) {
+  public Session(String sessionId, Long userId, Long expiresAt, String status) {
     this.sessionId = sessionId;
     this.userId = userId;
     this.expiresAt = expiresAt;
-      this.isDeleted = false;
+    this.status = status;
   }
 
   public Session() {}
@@ -54,11 +54,11 @@ public class Session {
     this.expiresAt = expiresAt;
   }
 
-  public boolean isDeleted() {
-    return isDeleted;
+  public String getStatus() {
+    return status;
   }
 
-  public void setDeleted(boolean deleted) {
-    isDeleted = deleted;
+  public void setStatus(String status) {
+    this.status = status;
   }
 }
