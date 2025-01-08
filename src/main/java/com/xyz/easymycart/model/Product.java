@@ -18,7 +18,10 @@ public class Product implements Serializable {
   private Long id;
 
   private String title;
-  private Integer price;
+  @Column(name = "selling_price")
+  private Integer sellingPrice;
+  @Column(name = "original_price")
+  private Integer originalPrice;
   private String description;
 
   //    @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST,CascadeType.MERGE} )
@@ -29,23 +32,28 @@ public class Product implements Serializable {
   //    private Rating rating;
   private Long rating_id;
 
+  @Column(name = "product_type")
+  private String productType;
+
   public Product() {}
 
   public Product(
       Long id,
       String title,
-      Integer price,
+      Integer sellingPrice,
       String description,
       String image,
       Long category_id,
-      Long rating_id) {
+      Long rating_id,Integer originalPrice,String productType) {
     this.id = id;
     this.title = title;
-    this.price = price;
+    this.sellingPrice = sellingPrice;
     this.description = description;
     this.image = image;
     this.category_id = category_id;
     this.rating_id = rating_id;
+    this.originalPrice = originalPrice;
+    this.productType = productType;
   }
 
   public Long getId() {
@@ -64,12 +72,12 @@ public class Product implements Serializable {
     this.title = title;
   }
 
-  public Integer getPrice() {
-    return price;
+  public void setSellingPrice(Integer sellingPrice) {
+    this.sellingPrice = sellingPrice;
   }
 
-  public void setPrice(Integer price) {
-    this.price = price;
+  public Integer getSellingPrice() {
+    return sellingPrice;
   }
 
   public String getDescription() {
@@ -98,5 +106,21 @@ public class Product implements Serializable {
 
   public void setRating_id(Long rating_id) {
     this.rating_id = rating_id;
+  }
+
+  public Integer getOriginalPrice() {
+    return originalPrice;
+  }
+
+  public void setOriginalPrice(Integer originalPrice) {
+    this.originalPrice = originalPrice;
+  }
+
+  public String getProductType() {
+    return productType;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
   }
 }

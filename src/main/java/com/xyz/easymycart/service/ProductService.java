@@ -2,6 +2,7 @@ package com.xyz.easymycart.service;
 
 import com.xyz.easymycart.model.*;
 import com.xyz.easymycart.repository.*;
+import com.xyz.easymycart.request.AddressRequestDto;
 import com.xyz.easymycart.request.LoginRequestDto;
 import com.xyz.easymycart.response.LoginResponseDto;
 import com.xyz.easymycart.utilities.UniqueHelper;
@@ -24,19 +25,20 @@ public class ProductService {
   private final UserRepository userRepository;
   private final SessionRepository sessionRepository;
   private final OrderRepository orderRepository;
+  private final AddressRepository addressRepository;
 
   @Autowired
   public ProductService(
-      ProductRepository productRepository,
-      CategoryRepository categoryRepository,
-      UserRepository userRepository,
-      RatingRepository ratingRepository,
-      CartRepository cartRepository,
-      CartItemsRepository cartItemsRepository,
-      WishlistRepository wishlistRepository,
-      WishlistItemsRepository wishlistItemsRepository,
-      SessionRepository sessionRepository,
-      OrderRepository orderRepository) {
+          ProductRepository productRepository,
+          CategoryRepository categoryRepository,
+          UserRepository userRepository,
+          RatingRepository ratingRepository,
+          CartRepository cartRepository,
+          CartItemsRepository cartItemsRepository,
+          WishlistRepository wishlistRepository,
+          WishlistItemsRepository wishlistItemsRepository,
+          SessionRepository sessionRepository,
+          OrderRepository orderRepository, AddressRepository addressRepository) {
     this.productRepository = productRepository;
     this.categoryRepository = categoryRepository;
     this.userRepository = userRepository;
@@ -47,6 +49,7 @@ public class ProductService {
     this.wishlistItemsRepository = wishlistItemsRepository;
     this.sessionRepository = sessionRepository;
     this.orderRepository = orderRepository;
+      this.addressRepository = addressRepository;
   }
 
   public List<Product> getAllProducts() {
@@ -232,5 +235,17 @@ public class ProductService {
     order.setCartId(cartId);
     order.setDeliveredOn(UtilityHelper.getCurrentMillis());
     return orderRepository.save(order);
+  }
+
+  public Address addAddress(AddressRequestDto addressRequestDto,Long userId){
+      Address address = new Address();
+      address.setArea(addressRequestDto.getArea());
+      address.setPhone(addressRequestDto.getPhone());
+      address.setFlatNumber(addressRequestDto.getFlatNumber());
+      address.setFullName(addressRequestDto.getFullName());
+      address.setPinCode(addressRequestDto.getPinCode());
+      address.setVillage(addressRequestDto.getVillage());
+      address.setUserId(userId);
+      return addressRepository.save(address);
   }
 }
