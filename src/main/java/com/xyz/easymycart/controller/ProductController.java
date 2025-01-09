@@ -3,6 +3,7 @@ package com.xyz.easymycart.controller;
 import com.xyz.easymycart.model.Category;
 import com.xyz.easymycart.model.Product;
 import com.xyz.easymycart.model.Rating;
+import com.xyz.easymycart.model.RecentlyViewed;
 import com.xyz.easymycart.service.ProductService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,5 +71,14 @@ public class ProductController {
   public Rating getProductRating(@PathVariable("id") Long id) {
     Rating rating = productService.getProductRating(id);
     return rating;
+  }
+  @PostMapping("/recent")
+  public ResponseEntity<String> addRecentProducts(@RequestHeader("userId") Long userId,@RequestParam("product_id") Long productId){
+    boolean added = productService.addRecentProducts(productId,userId);
+    if(added){
+       return ResponseEntity.ok("product added successfully");
+    }else{
+      return ResponseEntity.status(HttpStatus.CONFLICT).body("product already exist in recently added");
+    }
   }
 }

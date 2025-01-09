@@ -2,6 +2,7 @@ package com.xyz.easymycart.service;
 
 import com.xyz.easymycart.model.*;
 import com.xyz.easymycart.repository.*;
+import com.xyz.easymycart.repository.RecentlyViewedRepo;
 import com.xyz.easymycart.request.AddressRequestDto;
 import com.xyz.easymycart.request.LoginRequestDto;
 import com.xyz.easymycart.response.LoginResponseDto;
@@ -26,6 +27,7 @@ public class ProductService {
   private final SessionRepository sessionRepository;
   private final OrderRepository orderRepository;
   private final AddressRepository addressRepository;
+  private final RecentlyViewedRepo recentlyViewedRepo;
 
   @Autowired
   public ProductService(
@@ -38,7 +40,7 @@ public class ProductService {
           WishlistRepository wishlistRepository,
           WishlistItemsRepository wishlistItemsRepository,
           SessionRepository sessionRepository,
-          OrderRepository orderRepository, AddressRepository addressRepository) {
+          OrderRepository orderRepository, AddressRepository addressRepository, RecentlyViewedRepo recentlyViewedRepo) {
     this.productRepository = productRepository;
     this.categoryRepository = categoryRepository;
     this.userRepository = userRepository;
@@ -50,6 +52,7 @@ public class ProductService {
     this.sessionRepository = sessionRepository;
     this.orderRepository = orderRepository;
       this.addressRepository = addressRepository;
+      this.recentlyViewedRepo = recentlyViewedRepo;
   }
 
   public List<Product> getAllProducts() {
@@ -247,5 +250,16 @@ public class ProductService {
       address.setVillage(addressRequestDto.getVillage());
       address.setUserId(userId);
       return addressRepository.save(address);
+  }
+
+  public boolean addRecentProducts(Long productId,Long userId){
+    if(!recentlyViewedRepo.findByUserIdAndProductId(productId,userId)){
+        RecentlyViewed recentlyViewed = new RecentlyViewed();
+        recentlyViewed.setProductId(productId);
+        recentlyViewed.setUserId(userId);
+        recentlyViewedRepo.save(recentlyViewed);
+        return true;
+    }
+    return false;
   }
 }
