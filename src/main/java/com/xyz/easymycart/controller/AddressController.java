@@ -6,6 +6,8 @@ import com.xyz.easymycart.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/address")
 public class AddressController {
@@ -20,5 +22,11 @@ public class AddressController {
     public Address addAddress(@RequestHeader("userId") Long userId, @RequestBody AddressRequestDto addressRequestDto){
         Address address = productService.addAddress(addressRequestDto,userId);
         return address;
+    }
+
+    @GetMapping("/")
+    public List<Address> getUserAddress(@RequestHeader("userId") Long userId){
+        List<Address> addressList = productService.getUserAddress(userId);
+        return addressList;
     }
 }

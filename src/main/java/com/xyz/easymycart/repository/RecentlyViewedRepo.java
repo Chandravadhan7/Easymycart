@@ -6,11 +6,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface RecentlyViewedRepo extends JpaRepository<RecentlyViewed,Long> {
 
    RecentlyViewed save(RecentlyViewed recentlyViewed);
 
    @Query(value = "select * from recently_viewed r where r.product_id = :productId and r.user_id = :userId",nativeQuery = true)
-   boolean findByUserIdAndProductId(@Param("productId") Long productId, @Param("userId") Long userId);
+   Optional<RecentlyViewed> findByUserIdAndProductId(@Param("productId") Long productId, @Param("userId") Long userId);
 }

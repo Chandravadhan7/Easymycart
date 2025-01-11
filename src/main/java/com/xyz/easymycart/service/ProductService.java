@@ -8,6 +8,8 @@ import com.xyz.easymycart.request.LoginRequestDto;
 import com.xyz.easymycart.response.LoginResponseDto;
 import com.xyz.easymycart.utilities.UniqueHelper;
 import com.xyz.easymycart.utilities.UtilityHelper;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -253,7 +255,8 @@ public class ProductService {
   }
 
   public boolean addRecentProducts(Long productId,Long userId){
-    if(!recentlyViewedRepo.findByUserIdAndProductId(productId,userId)){
+    Optional<RecentlyViewed> optionalRecentlyViewed = recentlyViewedRepo.findByUserIdAndProductId(productId,userId);
+    if(!optionalRecentlyViewed.isPresent()){
         RecentlyViewed recentlyViewed = new RecentlyViewed();
         recentlyViewed.setProductId(productId);
         recentlyViewed.setUserId(userId);
@@ -261,5 +264,10 @@ public class ProductService {
         return true;
     }
     return false;
+  }
+
+  public List<Address> getUserAddress(Long userId){
+     List<Address> addressList =  addressRepository.findAddressByUserId(userId);
+     return addressList;
   }
 }
