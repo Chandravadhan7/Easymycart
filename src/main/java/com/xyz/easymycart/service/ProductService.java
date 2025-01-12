@@ -242,6 +242,11 @@ public class ProductService {
     return orderRepository.save(order);
   }
 
+  public List<Order> getUserOrders(Long userId){
+    List<Order> orderList = orderRepository.getOrderByUserId(userId);
+    return orderList;
+  }
+
   public Address addAddress(AddressRequestDto addressRequestDto,Long userId){
       Address address = new Address();
       address.setArea(addressRequestDto.getArea());
@@ -252,6 +257,10 @@ public class ProductService {
       address.setVillage(addressRequestDto.getVillage());
       address.setUserId(userId);
       return addressRepository.save(address);
+  }
+  public List<Address> getUserAddress(Long userId){
+    List<Address> addressList =  addressRepository.findAddressByUserId(userId);
+    return addressList;
   }
 
   public boolean addRecentProducts(Long productId,Long userId){
@@ -266,8 +275,9 @@ public class ProductService {
     return false;
   }
 
-  public List<Address> getUserAddress(Long userId){
-     List<Address> addressList =  addressRepository.findAddressByUserId(userId);
-     return addressList;
+  public List<RecentlyViewed> getRecentlyViewedProducts(Long userId){
+    List<RecentlyViewed> recentlyViewedList = recentlyViewedRepo.getRecentlyViewedByUserId(userId);
+    return recentlyViewedList;
   }
+
 }

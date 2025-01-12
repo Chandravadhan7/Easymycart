@@ -4,6 +4,8 @@ import com.xyz.easymycart.model.Order;
 import com.xyz.easymycart.service.ProductService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/order")
 public class OrderController {
@@ -18,5 +20,11 @@ public class OrderController {
   public Order addOrder(@RequestHeader Long userId, @PathVariable("cartId") Long cartId) {
     Order order = productService.addOrder(cartId, userId);
     return order;
+  }
+
+  @GetMapping("/")
+  public List<Order> getUserOrders(@RequestHeader("userId") Long userId){
+    List<Order> orderList = productService.getUserOrders(userId);
+    return orderList;
   }
 }

@@ -81,4 +81,10 @@ public class ProductController {
       return ResponseEntity.status(HttpStatus.CONFLICT).body("product already exist in recently added");
     }
   }
+
+  @GetMapping("/recentlyViewed")
+  public List<RecentlyViewed> getRecentlyViewedProducts(@RequestHeader("userId") Long userId){
+    List<RecentlyViewed> recentlyViewedList = productService.getRecentlyViewedProducts(userId);
+    return  recentlyViewedList;
+  }
 }
