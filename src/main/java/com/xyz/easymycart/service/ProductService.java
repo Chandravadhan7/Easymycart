@@ -238,7 +238,8 @@ public class ProductService {
     order.setOrderId(UniqueHelper.getOrderID());
     order.setUserId(userId);
     order.setCartId(cartId);
-    order.setDeliveredOn(UtilityHelper.getCurrentMillis());
+    order.setOrderedOn(UtilityHelper.getCurrentMillis());
+    order.setDeliveredOn(UtilityHelper.getCurrentMillis()+TimeUnit.DAYS.toMillis(1));
     return orderRepository.save(order);
   }
 

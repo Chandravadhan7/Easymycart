@@ -19,16 +19,20 @@ public class Order {
   private Long userId;
 
   @Column(name = "delivered_on")
-  private Long DeliveredOn;
+  private Long deliveredOn;
+
+  @Column(name = "ordered_on")
+  private Long orderedOn;
 
   public Order() {}
 
-  public Order(Long id, String orderId, Long cartId, Long userId, Long deliveredOn) {
+  public Order(Long id, String orderId, Long cartId, Long userId, Long deliveredOn, Long orderedOn) {
     this.id = id;
     this.orderId = orderId;
     this.cartId = cartId;
     this.userId = userId;
-    DeliveredOn = deliveredOn;
+    this.deliveredOn = deliveredOn;
+    this.orderedOn = orderedOn;
   }
 
   public Long getId() {
@@ -64,10 +68,18 @@ public class Order {
   }
 
   public Long getDeliveredOn() {
-    return DeliveredOn;
+    return deliveredOn;
   }
 
   public void setDeliveredOn(Long deliveredOn) {
-    DeliveredOn = deliveredOn;
+    this.deliveredOn = deliveredOn;
+  }
+
+  public Long getOrderedOn() {
+    return orderedOn;
+  }
+
+  public void setOrderedOn(Long orderedOn) {
+    this.orderedOn = orderedOn;
   }
 }
