@@ -23,6 +23,8 @@ public class Product implements Serializable {
   @Column(name = "original_price")
   private Integer originalPrice;
   private String description;
+  @Column(name = "discount")
+  private Integer discount;
 
   //    @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST,CascadeType.MERGE} )
   //    private Category category;
@@ -44,7 +46,7 @@ public class Product implements Serializable {
       String description,
       String image,
       Long category_id,
-      Long rating_id,Integer originalPrice,String productType) {
+      Long rating_id,Integer originalPrice,String productType,Integer discount) {
     this.id = id;
     this.title = title;
     this.sellingPrice = sellingPrice;
@@ -54,6 +56,7 @@ public class Product implements Serializable {
     this.rating_id = rating_id;
     this.originalPrice = originalPrice;
     this.productType = productType;
+    this.discount = discount;
   }
 
   public Long getId() {
@@ -122,5 +125,13 @@ public class Product implements Serializable {
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  public void setDiscount(Integer discount) {
+    this.discount = discount;
+  }
+
+  public Integer getDiscount() {
+    return discount;
   }
 }

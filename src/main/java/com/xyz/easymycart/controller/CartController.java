@@ -6,6 +6,7 @@ import com.xyz.easymycart.service.ProductService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
@@ -69,9 +70,14 @@ public class CartController {
   }
 
   @DeleteMapping("/{productId}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void removeFromCart(@PathVariable("productId") Long productId) {
-    productService.removeFromCart(productId);
+  public ResponseEntity<String> removeFromCart(@PathVariable("productId") Long productId) {
+    try {
+      productService.removeFromCart(productId);
+      return ResponseEntity.ok("Product removed successfully.");
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+              .body("Failed to remove product from cart: " + e.getMessage());
+    }
   }
 
   @PatchMapping("/cartitems/{productId}/increment")
