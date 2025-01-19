@@ -72,6 +72,11 @@ public class ProductController {
     Rating rating = productService.getProductRating(id);
     return rating;
   }
+  @GetMapping("/api/search")
+  public List<Product> getProductsByTitle(@RequestParam("searchValue") String title){
+    List<Product> products = productService.getProductsByTitle(title);
+    return products;
+  }
   @PostMapping("/recent")
   public ResponseEntity<String> addRecentProducts(@RequestHeader("userId") Long userId,@RequestParam("product_id") Long productId){
     boolean added = productService.addRecentProducts(productId,userId);

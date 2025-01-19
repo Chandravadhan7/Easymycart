@@ -61,7 +61,10 @@ public class ProductService {
     List<Product> products = productRepository.getAll();
     return products;
   }
-
+  public List<Product> getProductsByTitle(String title){
+    List<Product> products = productRepository.getProductsByTitle(title);
+    return products;
+  }
   public List<String> getAllCategories() {
     List<String> categories = productRepository.getAllCat();
     return categories;
