@@ -22,7 +22,13 @@ public class Address {
     private String village;
     @Column(name = "user_id",nullable = false)
     private Long userId;
-    public Address(Long id, String fullName, String phone, String pinCode, String flatNumber, String area, String village, Long userId){
+    @Column(name = "landmark",nullable = false)
+    private String landMark;
+    @Column(name = "district",nullable = false)
+    private String district;
+    @Column(name = "state",nullable = false)
+    private String state;
+    public Address(Long id, String fullName, String phone, String pinCode, String flatNumber, String area, String village, Long userId, String landMark, String district, String state){
 
         this.id = id;
         this.fullName = fullName;
@@ -32,6 +38,9 @@ public class Address {
         this.area = area;
         this.village = village;
         this.userId = userId;
+        this.landMark = landMark;
+        this.district = district;
+        this.state = state;
     }
 
     public Address(){
@@ -100,5 +109,29 @@ public class Address {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public String getLandMark() {
+        return landMark;
+    }
+
+    public void setLandMark(String landMark) {
+        this.landMark = landMark;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }

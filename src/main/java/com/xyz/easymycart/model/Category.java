@@ -19,9 +19,13 @@ public class Category implements Serializable {
 
   private String title;
 
-  public Category(Long id, String title) {
+  @Column(name="image_url")
+  private String imageUrl;
+
+  public Category(Long id, String title,String imageUrl) {
     this.id = id;
     this.title = title;
+    this.imageUrl = imageUrl;
   }
 
   public Category() {}
@@ -40,5 +44,13 @@ public class Category implements Serializable {
 
   public void setTitle(String title) {
     this.title = title;
+  }
+
+  public String getImageUrl() {
+    return imageUrl;
+  }
+
+  public void setImageUrl(String imageUrl) {
+    this.imageUrl = imageUrl;
   }
 }

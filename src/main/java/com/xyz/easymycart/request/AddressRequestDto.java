@@ -8,6 +8,10 @@ public class AddressRequestDto {
     private String pinCode;
     private String flatNumber;
     private String area;
+    private String village;
+    private String landMark;
+    private String district;
+    private String state;
     public String getVillage() {
         return village;
     }
@@ -56,5 +60,29 @@ public class AddressRequestDto {
         this.fullName = fullName;
     }
 
-    private String village;
+
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public String getLandMark() {
+        return landMark;
+    }
+
+    public void setLandMark(String landMark) {
+        this.landMark = landMark;
+    }
 }

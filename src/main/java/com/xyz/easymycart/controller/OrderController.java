@@ -17,8 +17,8 @@ public class OrderController {
   }
 
   @PostMapping("/{cartId}")
-  public Order addOrder(@RequestHeader Long userId, @PathVariable("cartId") Long cartId) {
-    Order order = productService.addOrder(cartId, userId);
+  public Order addOrder(@RequestHeader Long userId, @PathVariable("cartId") Long cartId ,@RequestParam("address_id") Long addressId) {
+    Order order = productService.addOrder(cartId, userId,addressId);
     return order;
   }
 

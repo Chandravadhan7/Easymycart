@@ -29,4 +29,10 @@ public class AddressController {
         List<Address> addressList = productService.getUserAddress(userId);
         return addressList;
     }
+
+    @GetMapping("/{id}")
+    public Address getAddress(@PathVariable("id") Long id){
+        Address address =productService.getAddress(id);
+        return address;
+    }
 }

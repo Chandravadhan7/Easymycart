@@ -232,7 +232,7 @@ public class ProductService {
     return wishlistItems;
   }
 
-  public Order addOrder(Long cartId, Long userId) {
+  public Order addOrder(Long cartId, Long userId,Long addressId) {
 
     Order order = new Order();
     order.setOrderId(UniqueHelper.getOrderID());
@@ -240,6 +240,7 @@ public class ProductService {
     order.setCartId(cartId);
     order.setOrderedOn(UtilityHelper.getCurrentMillis());
     order.setDeliveredOn(UtilityHelper.getCurrentMillis()+TimeUnit.DAYS.toMillis(1));
+    order.setAddressId(addressId);
     return orderRepository.save(order);
   }
 
@@ -256,12 +257,19 @@ public class ProductService {
       address.setFullName(addressRequestDto.getFullName());
       address.setPinCode(addressRequestDto.getPinCode());
       address.setVillage(addressRequestDto.getVillage());
+      address.setLandMark(addressRequestDto.getLandMark());
+      address.setDistrict(addressRequestDto.getDistrict());
+      address.setState(addressRequestDto.getState());
       address.setUserId(userId);
       return addressRepository.save(address);
   }
   public List<Address> getUserAddress(Long userId){
     List<Address> addressList =  addressRepository.findAddressByUserId(userId);
     return addressList;
+  }
+  public Address getAddress(Long id){
+    Address address = addressRepository.findAddressById(id);
+    return address;
   }
 
   public boolean addRecentProducts(Long productId,Long userId){
