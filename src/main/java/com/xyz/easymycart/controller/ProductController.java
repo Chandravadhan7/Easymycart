@@ -1,9 +1,6 @@
 package com.xyz.easymycart.controller;
 
-import com.xyz.easymycart.model.Category;
-import com.xyz.easymycart.model.Product;
-import com.xyz.easymycart.model.Rating;
-import com.xyz.easymycart.model.RecentlyViewed;
+import com.xyz.easymycart.model.*;
 import com.xyz.easymycart.service.ProductService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +68,11 @@ public class ProductController {
   public Rating getProductRating(@PathVariable("id") Long id) {
     Rating rating = productService.getProductRating(id);
     return rating;
+  }
+  @GetMapping("/api/ratings/{ratingId}")
+  public List<RatingItems> getProductRatings(@PathVariable("ratingId") Long ratingId){
+    List<RatingItems> ratingItems = productService.getProductRatings(ratingId);
+    return ratingItems;
   }
   @GetMapping("/api/search")
   public List<Product> getProductsByTitle(@RequestParam("searchValue") String title){

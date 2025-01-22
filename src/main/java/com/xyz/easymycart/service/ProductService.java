@@ -30,6 +30,7 @@ public class ProductService {
   private final OrderRepository orderRepository;
   private final AddressRepository addressRepository;
   private final RecentlyViewedRepo recentlyViewedRepo;
+  private final RatingItemsRepository ratingItemsRepository;
 
   @Autowired
   public ProductService(
@@ -42,7 +43,7 @@ public class ProductService {
           WishlistRepository wishlistRepository,
           WishlistItemsRepository wishlistItemsRepository,
           SessionRepository sessionRepository,
-          OrderRepository orderRepository, AddressRepository addressRepository, RecentlyViewedRepo recentlyViewedRepo) {
+          OrderRepository orderRepository, AddressRepository addressRepository, RecentlyViewedRepo recentlyViewedRepo, RatingItemsRepository ratingItemsRepository) {
     this.productRepository = productRepository;
     this.categoryRepository = categoryRepository;
     this.userRepository = userRepository;
@@ -55,6 +56,7 @@ public class ProductService {
     this.orderRepository = orderRepository;
       this.addressRepository = addressRepository;
       this.recentlyViewedRepo = recentlyViewedRepo;
+      this.ratingItemsRepository = ratingItemsRepository;
   }
 
   public List<Product> getAllProducts() {
@@ -151,6 +153,11 @@ public class ProductService {
     Optional<Rating> optionalRating = ratingRepository.getProductRating(id);
     Rating rating = optionalRating.get();
     return rating;
+  }
+
+  public List<RatingItems> getProductRatings(Long ratingId){
+    List<RatingItems> ratingItems = ratingItemsRepository.getRatingsByRatingId(ratingId);
+    return ratingItems;
   }
 
   public Cart getOrCreateCart(Long userId) {
