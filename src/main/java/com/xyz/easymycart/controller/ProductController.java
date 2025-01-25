@@ -69,7 +69,7 @@ public class ProductController {
     Rating rating = productService.getProductRating(id);
     return rating;
   }
-  @GetMapping("/api/ratings/{ratingId}")
+  @GetMapping("/ratings/{ratingId}")
   public List<RatingItems> getProductRatings(@PathVariable("ratingId") Long ratingId){
     List<RatingItems> ratingItems = productService.getProductRatings(ratingId);
     return ratingItems;
