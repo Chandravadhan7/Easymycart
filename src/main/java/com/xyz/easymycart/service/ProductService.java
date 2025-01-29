@@ -273,6 +273,10 @@ public class ProductService {
       address.setUserId(userId);
       return addressRepository.save(address);
   }
+  public void updateUserAddress(Long id,AddressRequestDto addressRequestDto){
+    addressRepository.updateAddressById(id, addressRequestDto.getFullName(), addressRequestDto.getPhone(), addressRequestDto.getPinCode(), addressRequestDto.getFlatNumber(), addressRequestDto.getArea(), addressRequestDto.getVillage(), addressRequestDto.getLandMark(), addressRequestDto.getDistrict(), addressRequestDto.getState());
+      return ;
+  }
   public List<Address> getUserAddress(Long userId){
     List<Address> addressList =  addressRepository.findAddressByUserId(userId);
     return addressList;

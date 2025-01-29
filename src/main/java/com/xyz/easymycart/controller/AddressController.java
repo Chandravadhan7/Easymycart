@@ -4,6 +4,7 @@ import com.xyz.easymycart.model.Address;
 import com.xyz.easymycart.request.AddressRequestDto;
 import com.xyz.easymycart.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,11 @@ public class AddressController {
     public Address addAddress(@RequestHeader("userId") Long userId, @RequestBody AddressRequestDto addressRequestDto){
         Address address = productService.addAddress(addressRequestDto,userId);
         return address;
+    }
+    @PatchMapping("/api/update-address/{id}")
+    public ResponseEntity<String> updateAddress(@PathVariable("id")Long id, @RequestBody AddressRequestDto addressRequestDto){
+         productService.updateUserAddress(id,addressRequestDto);
+        return ResponseEntity.ok("address updated successfully");
     }
 
     @GetMapping("/")
