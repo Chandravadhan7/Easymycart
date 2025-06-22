@@ -9,9 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RestController
-@RequestMapping("cart")
+@RequestMapping("/cart")
 public class CartController {
   private ProductService productService;
 
@@ -76,7 +75,7 @@ public class CartController {
       return ResponseEntity.ok("Product removed successfully.");
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-              .body("Failed to remove product from cart: " + e.getMessage());
+          .body("Failed to remove product from cart: " + e.getMessage());
     }
   }
 

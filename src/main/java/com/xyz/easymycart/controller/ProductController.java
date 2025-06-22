@@ -8,9 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("product")
+@RequestMapping("/product")
 public class ProductController {
   private ProductService productService;
 
@@ -69,29 +68,34 @@ public class ProductController {
     Rating rating = productService.getProductRating(id);
     return rating;
   }
+
   @GetMapping("/ratings/{ratingId}")
-  public List<RatingItems> getProductRatings(@PathVariable("ratingId") Long ratingId){
+  public List<RatingItems> getProductRatings(@PathVariable("ratingId") Long ratingId) {
     List<RatingItems> ratingItems = productService.getProductRatings(ratingId);
     return ratingItems;
   }
+
   @GetMapping("/api/search")
-  public List<Product> getProductsByTitle(@RequestParam("searchValue") String title){
+  public List<Product> getProductsByTitle(@RequestParam("searchValue") String title) {
     List<Product> products = productService.getProductsByTitle(title);
     return products;
   }
+
   @PostMapping("/recent")
-  public ResponseEntity<String> addRecentProducts(@RequestHeader("userId") Long userId,@RequestParam("product_id") Long productId){
-    boolean added = productService.addRecentProducts(productId,userId);
-    if(added){
-       return ResponseEntity.ok("product added successfully");
-    }else{
-      return ResponseEntity.status(HttpStatus.CONFLICT).body("product already exist in recently added");
+  public ResponseEntity<String> addRecentProducts(
+      @RequestHeader("userId") Long userId, @RequestParam("product_id") Long productId) {
+    boolean added = productService.addRecentProducts(productId, userId);
+    if (added) {
+      return ResponseEntity.ok("product added successfully");
+    } else {
+      return ResponseEntity.status(HttpStatus.CONFLICT)
+          .body("product already exist in recently added");
     }
   }
 
   @GetMapping("/recentlyViewed")
-  public List<RecentlyViewed> getRecentlyViewedProducts(@RequestHeader("userId") Long userId){
+  public List<RecentlyViewed> getRecentlyViewedProducts(@RequestHeader("userId") Long userId) {
     List<RecentlyViewed> recentlyViewedList = productService.getRecentlyViewedProducts(userId);
-    return  recentlyViewedList;
+    return recentlyViewedList;
   }
 }
