@@ -11,8 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("user")
-@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("/user")
 public class UserController {
   private ProductService productService;
 
@@ -21,7 +20,7 @@ public class UserController {
     this.productService = productService;
   }
 
-  @PostMapping("/signup")
+  @PostMapping("api/signup")
   public User addUser(@RequestBody User user) {
     User user1 = productService.addUser(user);
     return user;
@@ -52,11 +51,13 @@ public class UserController {
   }
 
   @PostMapping("/api/validate")
-  public Session protectedEndpoint(@RequestHeader("sessionId") String sessionId) throws Exception {
-
-    // Validate the session
-    Session session = productService.getValidSession(sessionId);
-
-    return session;
+  public ResponseEntity<?> validate(@RequestHeader("sessionId") String sessionId) {
+    try {
+      Session session = productService.getValidSession(sessionId);
+      return ResponseEntity.ok().build();
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired session");
+    }
   }
+
 }
