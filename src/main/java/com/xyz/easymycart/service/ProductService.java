@@ -8,8 +8,6 @@ import com.xyz.easymycart.request.LoginRequestDto;
 import com.xyz.easymycart.response.LoginResponseDto;
 import com.xyz.easymycart.utilities.UniqueHelper;
 import com.xyz.easymycart.utilities.UtilityHelper;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -34,16 +32,19 @@ public class ProductService {
 
   @Autowired
   public ProductService(
-          ProductRepository productRepository,
-          CategoryRepository categoryRepository,
-          UserRepository userRepository,
-          RatingRepository ratingRepository,
-          CartRepository cartRepository,
-          CartItemsRepository cartItemsRepository,
-          WishlistRepository wishlistRepository,
-          WishlistItemsRepository wishlistItemsRepository,
-          SessionRepository sessionRepository,
-          OrderRepository orderRepository, AddressRepository addressRepository, RecentlyViewedRepo recentlyViewedRepo, RatingItemsRepository ratingItemsRepository) {
+      ProductRepository productRepository,
+      CategoryRepository categoryRepository,
+      UserRepository userRepository,
+      RatingRepository ratingRepository,
+      CartRepository cartRepository,
+      CartItemsRepository cartItemsRepository,
+      WishlistRepository wishlistRepository,
+      WishlistItemsRepository wishlistItemsRepository,
+      SessionRepository sessionRepository,
+      OrderRepository orderRepository,
+      AddressRepository addressRepository,
+      RecentlyViewedRepo recentlyViewedRepo,
+      RatingItemsRepository ratingItemsRepository) {
     this.productRepository = productRepository;
     this.categoryRepository = categoryRepository;
     this.userRepository = userRepository;
@@ -54,16 +55,16 @@ public class ProductService {
     this.wishlistItemsRepository = wishlistItemsRepository;
     this.sessionRepository = sessionRepository;
     this.orderRepository = orderRepository;
-      this.addressRepository = addressRepository;
-      this.recentlyViewedRepo = recentlyViewedRepo;
-      this.ratingItemsRepository = ratingItemsRepository;
+    this.addressRepository = addressRepository;
+    this.recentlyViewedRepo = recentlyViewedRepo;
+    this.ratingItemsRepository = ratingItemsRepository;
   }
 
   public List<Product> getAllProducts() {
     List<Product> products = productRepository.getAll();
     return products;
   }
-  public List<Product> getProductsByTitle(String title){
+  public List<Product> getProductsByTitle(String title) {
     List<Product> products = productRepository.getProductsByTitle(title);
     return products;
   }
@@ -111,13 +112,8 @@ public class ProductService {
     return user;
   }
 
-  public User getUserByUserName(User user) {
-    User user1 = userRepository.getUserByUserName(user.getUserName());
-    return user1;
-  }
-
   public LoginResponseDto login(LoginRequestDto loginRequestDto) throws Exception {
-    User user = userRepository.getUserByUserName(loginRequestDto.getUserName());
+    User user = userRepository.getUserByEmail(loginRequestDto.getEmail());
     if (user.getPassword().equals(loginRequestDto.getPassword())) {
 
       Session session =
@@ -128,7 +124,7 @@ public class ProductService {
               "active");
 
       Session ses = sessionRepository.save(session);
-      return new LoginResponseDto(ses.getSessionId(), ses.getExpiresAt(), user.getId());
+      return new LoginResponseDto(ses.getSessionId(), ses.getExpiresAt(), user.getId(), user.getUserName());
     } else throw new Exception("Invalid credits");
   }
 
@@ -155,7 +151,7 @@ public class ProductService {
     return rating;
   }
 
-  public List<RatingItems> getProductRatings(Long ratingId){
+  public List<RatingItems> getProductRatings(Long ratingId) {
     List<RatingItems> ratingItems = ratingItemsRepository.getRatingsByRatingId(ratingId);
     return ratingItems;
   }
@@ -242,65 +238,78 @@ public class ProductService {
     return wishlistItems;
   }
 
-  public Order addOrder(Long cartId, Long userId,Long addressId) {
+  public Order addOrder(Long cartId, Long userId, Long addressId) {
 
     Order order = new Order();
     order.setOrderId(UniqueHelper.getOrderID());
     order.setUserId(userId);
     order.setCartId(cartId);
     order.setOrderedOn(UtilityHelper.getCurrentMillis());
-    order.setDeliveredOn(UtilityHelper.getCurrentMillis()+TimeUnit.DAYS.toMillis(1));
+    order.setDeliveredOn(UtilityHelper.getCurrentMillis() + TimeUnit.DAYS.toMillis(1));
     order.setAddressId(addressId);
     return orderRepository.save(order);
   }
 
-  public List<Order> getUserOrders(Long userId){
+  public List<Order> getUserOrders(Long userId) {
     List<Order> orderList = orderRepository.getOrderByUserId(userId);
     return orderList;
   }
 
-  public Address addAddress(AddressRequestDto addressRequestDto,Long userId){
-      Address address = new Address();
-      address.setArea(addressRequestDto.getArea());
-      address.setPhone(addressRequestDto.getPhone());
-      address.setFlatNumber(addressRequestDto.getFlatNumber());
-      address.setFullName(addressRequestDto.getFullName());
-      address.setPinCode(addressRequestDto.getPinCode());
-      address.setVillage(addressRequestDto.getVillage());
-      address.setLandMark(addressRequestDto.getLandMark());
-      address.setDistrict(addressRequestDto.getDistrict());
-      address.setState(addressRequestDto.getState());
-      address.setUserId(userId);
-      return addressRepository.save(address);
+  public Address addAddress(AddressRequestDto addressRequestDto, Long userId) {
+    Address address = new Address();
+    address.setArea(addressRequestDto.getArea());
+    address.setPhone(addressRequestDto.getPhone());
+    address.setFlatNumber(addressRequestDto.getFlatNumber());
+    address.setFullName(addressRequestDto.getFullName());
+    address.setPinCode(addressRequestDto.getPinCode());
+    address.setVillage(addressRequestDto.getVillage());
+    address.setLandMark(addressRequestDto.getLandMark());
+    address.setDistrict(addressRequestDto.getDistrict());
+    address.setState(addressRequestDto.getState());
+    address.setUserId(userId);
+    return addressRepository.save(address);
   }
-  public void updateUserAddress(Long id,AddressRequestDto addressRequestDto){
-    addressRepository.updateAddressById(id, addressRequestDto.getFullName(), addressRequestDto.getPhone(), addressRequestDto.getPinCode(), addressRequestDto.getFlatNumber(), addressRequestDto.getArea(), addressRequestDto.getVillage(), addressRequestDto.getLandMark(), addressRequestDto.getDistrict(), addressRequestDto.getState());
-      return ;
+
+  public void updateUserAddress(Long id, AddressRequestDto addressRequestDto) {
+    addressRepository.updateAddressById(
+        id,
+        addressRequestDto.getFullName(),
+        addressRequestDto.getPhone(),
+        addressRequestDto.getPinCode(),
+        addressRequestDto.getFlatNumber(),
+        addressRequestDto.getArea(),
+        addressRequestDto.getVillage(),
+        addressRequestDto.getLandMark(),
+        addressRequestDto.getDistrict(),
+        addressRequestDto.getState());
+    return;
   }
-  public List<Address> getUserAddress(Long userId){
-    List<Address> addressList =  addressRepository.findAddressByUserId(userId);
+
+  public List<Address> getUserAddress(Long userId) {
+    List<Address> addressList = addressRepository.findAddressByUserId(userId);
     return addressList;
   }
-  public Address getAddress(Long id){
+
+  public Address getAddress(Long id) {
     Address address = addressRepository.findAddressById(id);
     return address;
   }
 
-  public boolean addRecentProducts(Long productId,Long userId){
-    Optional<RecentlyViewed> optionalRecentlyViewed = recentlyViewedRepo.findByUserIdAndProductId(productId,userId);
-    if(!optionalRecentlyViewed.isPresent()){
-        RecentlyViewed recentlyViewed = new RecentlyViewed();
-        recentlyViewed.setProductId(productId);
-        recentlyViewed.setUserId(userId);
-        recentlyViewedRepo.save(recentlyViewed);
-        return true;
+  public boolean addRecentProducts(Long productId, Long userId) {
+    Optional<RecentlyViewed> optionalRecentlyViewed =
+        recentlyViewedRepo.findByUserIdAndProductId(productId, userId);
+    if (!optionalRecentlyViewed.isPresent()) {
+      RecentlyViewed recentlyViewed = new RecentlyViewed();
+      recentlyViewed.setProductId(productId);
+      recentlyViewed.setUserId(userId);
+      recentlyViewedRepo.save(recentlyViewed);
+      return true;
     }
     return false;
   }
 
-  public List<RecentlyViewed> getRecentlyViewedProducts(Long userId){
+  public List<RecentlyViewed> getRecentlyViewedProducts(Long userId) {
     List<RecentlyViewed> recentlyViewedList = recentlyViewedRepo.getRecentlyViewedByUserId(userId);
     return recentlyViewedList;
   }
-
 }
