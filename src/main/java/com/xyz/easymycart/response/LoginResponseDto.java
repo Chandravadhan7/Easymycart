@@ -8,6 +8,8 @@ public class LoginResponseDto {
 
   private Long userId;
 
+  private String userName;
+
   public Long getUserId() {
     return userId;
   }
@@ -32,9 +34,18 @@ public class LoginResponseDto {
     this.expiryAt = expiryAt;
   }
 
-  public LoginResponseDto(String sessionId, Long expiryAt, Long userId) {
+  public LoginResponseDto(String sessionId, Long expiryAt, Long userId, String userName) {
     this.sessionId = sessionId;
     this.expiryAt = expiryAt;
     this.userId = userId;
+      this.userName = userName;
+  }
+
+  public String getUserName() {
+    return userName;
+  }
+
+  public void setUserName(String userName) {
+    this.userName = userName;
   }
 }
